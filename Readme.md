@@ -13,3 +13,6 @@ The banking system can manage clients, their accounts, and transactions. Key fea
 - Joint accounts with multiple holders in the same branch.
 - Bank cards associated with accounts, with specific rules for debit and credit.
 - Transfers between accounts with execution dates and beneficiary details.
+
+![Class Diagram](https://github.com/PatriceAlan/SpringBank/blob/main/diagramDeClasseSpringBank.png?raw=true)
+
