@@ -15,16 +15,16 @@ public class Paiement{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_paiement;
+    private Long idPaiement;
 
     @ManyToOne
-    @JoinColumn(name = "numero_carte")
+    @JoinColumn(name = "numeroCarte")
     private Carte carte;
 
     @OneToOne
-    @JoinColumn(name = "id_transaction")
+    @JoinColumn(name = "idTransaction")
     private Transaction transaction;
 
-    private int code_securite;
+    private int codeSecurite;
     
 }

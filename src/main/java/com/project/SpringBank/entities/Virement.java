@@ -24,7 +24,7 @@ public class Virement {
 
     @ManyToOne
     @JoinColumn(name = "ibanCompteDebiteur")
-    private Compte iban_compte_debiteur;
+    private Compte ibanCompteDebiteur;
 
     @ManyToOne
     @JoinColumn(name = "ibanCompteCrediteur")
