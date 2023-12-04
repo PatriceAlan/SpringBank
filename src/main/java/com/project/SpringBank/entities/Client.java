@@ -1,26 +1,23 @@
 package com.project.SpringBank.entities;
 
-import java.sql.Date;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
-import lombok.*;
+import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 public class Client {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long idClient;
 
     @Column(length = 100)
     private String prenom;
@@ -28,22 +25,26 @@ public class Client {
     @Column(length = 100, nullable = false)
     private String nom;
 
-    private Date date_naissance;
+    @Temporal(TemporalType.DATE)
+    private Date dateNaissance;
 
     @Email
     @NotBlank
     @Size(max = 100)
     private String email;
 
-    private int numero_telephone;
+    @Column(length = 10, nullable = false)
+    private String numeroTelephone;
 
-    @Column(length = 255, nullable = false)
-    private String adresse_postale;
+    @Column(nullable = false)
+    private String adressePostale;
 
-    private Date date_creation;
+    @Temporal(TemporalType.DATE)
+    private Date dateCreation;
 
-    @OneToMany(mappedBy = "titulaire_compte")
+    @ManyToOne(targetEntity = Carte.class)
     private Carte carte;
-    
-    
+
+    @OneToMany(mappedBy = "titulaireCompte", cascade = CascadeType.ALL)
+    private List<Compte> comptes;
 }

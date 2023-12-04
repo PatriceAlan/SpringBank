@@ -1,30 +1,46 @@
 package com.project.SpringBank.entities;
 
-import java.sql.Date;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 public class Compte {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String iban;
 
-    private Long numero_compte;
+    private Long numeroCompte;
 
-    @ManyToMany
-    private Client titulaire_compte;
+    private double solde;
 
-    private Long solde;
+    @Enumerated(EnumType.STRING)
+    private TypeCompte typeCompte;
+
+    @ManyToOne(targetEntity = Client.class)
+    @JoinColumn(name = "idClient")
+    private Client titulaireCompte;
 
     @Column(length = 100, nullable = false)
-    private String intitule_compte;
+    private String intituleCompte;
 
-    private Date date_creation;
+    private LocalDate dateCreation;
 
-    
+    @OneToMany(mappedBy = "compte", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
+
+    @OneToMany(mappedBy = "compteCrediteur", cascade = CascadeType.ALL)
+    private List<Virement> virementsEmis;
+
+    @OneToMany(mappedBy = "compteDebiteur", cascade = CascadeType.ALL)
+    private List<Virement> virementsRecus;
+
+    @OneToMany(mappedBy = "compteAssocie", cascade = CascadeType.ALL)
+    private List<Carte> cartes;
+
+
 }

@@ -3,27 +3,31 @@ package com.project.SpringBank.entities;
 import java.sql.Date;
 import java.util.UUID;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Transaction {
+@Entity
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private UUID idTransaction;
 
-    private String type_transaction;
+    @Enumerated(EnumType.STRING)
+    private TypeTransaction typeTransaction;
 
-    private Date date_transaction;
+    @Enumerated(EnumType.STRING)
+    private TypeSource typeSource;
 
-    private int montant;
+    private Date dateTransaction;
+
+    private double montant;
+
+    @ManyToOne
+    @JoinColumn(name = "iban")
+    private Compte compte;
     
 }
 
