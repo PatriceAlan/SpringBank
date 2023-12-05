@@ -19,10 +19,10 @@ public class Carte {
 
     private LocalDate dateExpiration;
 
-    @ManyToOne(targetEntity = Client.class)
+    @ManyToOne
     private Client titulaireCarte;
 
-    @ManyToOne(targetEntity = Compte.class)
+    @ManyToOne
     @JoinColumn(name = "iban")
     private Compte compteAssocie;
 

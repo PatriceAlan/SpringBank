@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -42,9 +43,9 @@ public class Client {
     @Temporal(TemporalType.DATE)
     private LocalDate dateCreation;
 
-    @ManyToOne(targetEntity = Carte.class)
+    @ManyToOne
     private Carte carte;
 
-    @OneToMany(mappedBy = "titulaireCompte", cascade = CascadeType.ALL)
-    private List<Compte> comptes;
+    @ManyToMany(mappedBy = "clients")
+    private List<Compte> comptes = new ArrayList<>();
 }

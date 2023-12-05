@@ -1,11 +1,13 @@
 package com.project.SpringBank.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
-import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Set;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,9 +24,10 @@ public class Compte {
     @Enumerated(EnumType.STRING)
     private TypeCompte typeCompte;
 
-    @ManyToOne(targetEntity = Client.class)
-    @JoinColumn(name = "idClient")
-    private Client titulaireCompte;
+    @ManyToMany
+    @JoinTable(name = "clientCompte", joinColumns = @JoinColumn(name = "iban"),
+    inverseJoinColumns = @JoinColumn(name = "idClient"))
+    private Set<Client> clients = new HashSet<>();
 
     @Column(length = 100, nullable = false)
     private String intituleCompte;
