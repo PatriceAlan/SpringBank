@@ -2,7 +2,7 @@
 
 ## Présentation du Projet
 
-Ce projet implique le développement d'une API REST Spring Boot pour la gestion d'un petit système bancaire. L'équipe de l'interface web a achevé la phase de cadrage/conception en collaboration avec le développeur. L'objectif est de mettre en œuvre l'API REST selon les spécifications définies dans le contrat de service.
+Ce projet implique le développement d'une API REST Spring Boot pour la gestion d'un petit système bancaire. 
 
 ### Portée du Projet
 
