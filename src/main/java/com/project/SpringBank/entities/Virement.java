@@ -15,29 +15,23 @@ import lombok.*;
 public class Virement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idVirement;
 
     @OneToOne
     @JoinColumn(name = "idTransaction")
     private Transaction transaction;
 
-    @ManyToOne
-    @JoinColumn(name = "ibanCompteDebiteur")
-    private Compte ibanCompteDebiteur;
-
-    @ManyToOne
-    @JoinColumn(name = "ibanCompteCrediteur")
-    private Compte ibanCompteCrediteur;
     
     private String libelleVirement;
 
-    @ManyToOne
-    @JoinColumn(name = "compteDebiteurIban")
-    private Compte compteDebiteur;
 
     @ManyToOne
-    @JoinColumn(name = "compteCrediteurIban")
+    @JoinColumn(name = "ibanCompteCrediteur")
     private Compte compteCrediteur;
+
+    @ManyToOne
+    @JoinColumn(name = "ibanCompteDebiteur")
+    private Compte compteDebiteur;
 
 }

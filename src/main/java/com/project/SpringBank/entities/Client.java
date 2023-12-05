@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -26,7 +26,7 @@ public class Client {
     private String nom;
 
     @Temporal(TemporalType.DATE)
-    private Date dateNaissance;
+    private LocalDate dateNaissance;
 
     @Email
     @NotBlank
@@ -40,7 +40,7 @@ public class Client {
     private String adressePostale;
 
     @Temporal(TemporalType.DATE)
-    private Date dateCreation;
+    private LocalDate dateCreation;
 
     @ManyToOne(targetEntity = Carte.class)
     private Carte carte;

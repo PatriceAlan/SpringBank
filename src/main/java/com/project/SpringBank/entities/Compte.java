@@ -3,7 +3,9 @@ package com.project.SpringBank.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -11,7 +13,6 @@ import java.util.List;
 public class Compte {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String iban;
 
     private Long numeroCompte;

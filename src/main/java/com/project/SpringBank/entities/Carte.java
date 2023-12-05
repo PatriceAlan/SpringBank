@@ -1,15 +1,11 @@
 package com.project.SpringBank.entities;
 
-import java.sql.Date;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDate;
 import java.util.List;
-
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import lombok.*;
 
 @Getter
 @Setter
@@ -21,7 +17,7 @@ public class Carte {
     
     private int codeSecurite;
 
-    private Date dateExpiration;
+    private LocalDate dateExpiration;
 
     @ManyToOne(targetEntity = Client.class)
     private Client titulaireCarte;

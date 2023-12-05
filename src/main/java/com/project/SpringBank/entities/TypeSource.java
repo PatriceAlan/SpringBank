@@ -1,7 +1,17 @@
 package com.project.SpringBank.entities;
 
-public enum TypeSource {
+import lombok.Getter;
 
-    VIREMENT, CARTE;
-    
+@Getter
+public enum TypeSource {
+    VIREMENT("Virement"),
+    CARTE("Carte");
+
+    private final String label;
+
+    TypeSource(String label) {
+        this.label = label;
+    }
+
 }
+

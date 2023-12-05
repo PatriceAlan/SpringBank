@@ -1,7 +1,16 @@
 package com.project.SpringBank.entities;
 
-public enum TypeTransaction {
+import lombok.Getter;
 
-    DEBIT, CREDIT;
-    
+@Getter
+public enum TypeTransaction {
+    DEBIT("Débit"),
+    CREDIT("Crédit");
+
+    private final String label;
+
+    TypeTransaction(String label) {
+        this.label = label;
+    }
+
 }
