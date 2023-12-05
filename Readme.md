@@ -1,18 +1,18 @@
 # SpringBank
 
-## Project Overview
+## Présentation du Projet
 
-This project involves the development of a Spring Boot REST API for managing a small banking system. The web interface team has completed the framing/design phase in collaboration with the developer. The goal is to implement the REST API according to the specifications outlined in the service contract.
-Project Scope
+Ce projet implique le développement d'une API REST Spring Boot pour la gestion d'un petit système bancaire. L'équipe de l'interface web a achevé la phase de cadrage/conception en collaboration avec le développeur. L'objectif est de mettre en œuvre l'API REST selon les spécifications définies dans le contrat de service.
 
-The banking system can manage clients, their accounts, and transactions. Key features include:
+### Portée du Projet
 
-- Detailed client information: name, age, contact details, etc.
-- Clients associated with a bank code and branch/agency code.
-- Accounts with balances, identified by IBAN.
-- Joint accounts with multiple holders in the same branch.
-- Bank cards associated with accounts, with specific rules for debit and credit.
-- Transfers between accounts with execution dates and beneficiary details.
+Le système bancaire peut gérer des clients, leurs comptes et transactions. Les fonctionnalités clés comprennent :
 
-![Class Diagram](https://github.com/PatriceAlan/SpringBank/blob/main/diagramDeClasseSpringBank.png?raw=true)
+- Informations détaillées sur le client : nom, âge, coordonnées, etc.
+- Clients associés à un code bancaire et à un code d'agence.
+- Comptes avec soldes, identifiés par IBAN.
+- Comptes joints avec plusieurs titulaires dans la même agence.
+- Cartes bancaires associées aux comptes, avec des règles spécifiques pour le débit et le crédit.
+- Transferts entre les comptes avec des dates d'exécution et des détails sur le bénéficiaire.
 
+![Diagramme de Classe](https://github.com/PatriceAlan/SpringBank/blob/main/diagramDeClasseSpringBank.png?raw=true)
