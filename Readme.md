@@ -34,12 +34,12 @@ Le système bancaire a la capacité de gérer les clients, leurs comptes et les 
   - Attributs : type de transaction, source, date, montant.
   - Relations :
     - Une transaction concerne un seul compte (émetteur ou bénéficiaire).
-    - Une transaction peut être liée à un virement ou un paiement spécifique.
+    - Une transaction est liée à un virement ou un paiement spécifique à travers l'attribut idSource qui représente l'id de soit du virement ou soit du 
+    paiement.
 
 5. **Virement :**
   - Attributs : libellé du virement.
   - Relations :
-    - Un virement est associé à une transaction.
     - Un virement implique deux comptes (compte débiteur et compte créditeur).
 
 ### Diagramme de Classe UML
