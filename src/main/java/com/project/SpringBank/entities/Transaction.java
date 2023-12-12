@@ -21,6 +21,8 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TypeSource typeSource;
 
+    private Long idSource;
+
     private LocalDate dateTransaction;
 
     private double montant;
@@ -29,11 +31,6 @@ public class Transaction {
     @JoinColumn(name = "iban")
     private Compte compte;
 
-    @OneToOne(mappedBy = "transaction", cascade = CascadeType.ALL)
-    private Virement virement;
-
-    @OneToOne(mappedBy = "transaction", cascade = CascadeType.ALL)
-    private Paiement paiement;
 
 }
 

@@ -9,6 +9,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -20,14 +22,6 @@ public class Virement {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idVirement;
 
-    @OneToOne
-    @JoinColumn(name = "idTransaction")
-    private Transaction transaction;
-
-    
-    private String libelleVirement;
-
-
     @ManyToOne
     @JoinColumn(name = "ibanCompteCrediteur")
     private Compte compteCrediteur;
@@ -36,4 +30,9 @@ public class Virement {
     @JoinColumn(name = "ibanCompteDebiteur")
     private Compte compteDebiteur;
 
+    private String libelleVirement;
+
+    private double montantVirement;
+
+    private LocalDate dateVirement;
 }

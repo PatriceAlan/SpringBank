@@ -8,6 +8,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -23,10 +25,10 @@ public class Paiement{
     @JoinColumn(name = "numeroCarte")
     private Carte carte;
 
-    @OneToOne
-    @JoinColumn(name = "idTransaction")
-    private Transaction transaction;
-
     private int codeSecurite;
+
+    private double montantPaiement;
+
+    private LocalDate datePaiement;
     
 }

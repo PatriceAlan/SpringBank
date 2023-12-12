@@ -57,4 +57,3 @@ L'API REST est mise en œuvre en suivant les meilleures pratiques de Spring Boot
 ## Conclusion
 
 Ce projet vise à fournir une solution robuste et évolutive pour la gestion d'un système bancaire. Les normes de codage, les tests unitaires et une documentation approfondie sont encouragés pour faciliter la maintenance future.
-Ce projet vise à fournir une solution robuste et évolutive pour la gestion d'un système bancaire. Les normes de codage, les tests unitaires et une documentation approfondie sont encouragés pour faciliter la maintenance future.
