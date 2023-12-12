@@ -1,14 +1,14 @@
 package com.project.SpringBank.entities;
-
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@Entity
 @Getter
 @Setter
-@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Transaction {
 
     @Id
@@ -34,6 +34,6 @@ public class Transaction {
 
     @OneToOne(mappedBy = "transaction", cascade = CascadeType.ALL)
     private Paiement paiement;
-    
+
 }
 

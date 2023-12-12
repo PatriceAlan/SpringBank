@@ -11,6 +11,8 @@ import jakarta.persistence.OneToOne;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Paiement{
 
     @Id
