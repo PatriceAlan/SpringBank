@@ -44,7 +44,7 @@ Le système bancaire a la capacité de gérer les clients, leurs comptes et les 
 
 ### Diagramme de Classe UML
 
-![Diagramme de Classe](https://github.com/PatriceAlan/SpringBank/blob/main/diagramDeClasseSpringBank.png?raw=true)
+![Diagramme de Classe](https://github.com/PatriceAlan/SpringBank/blob/main/diagramme_de_classe_spring_bank.png?raw=true)
 
 ## Structure du Projet
 
