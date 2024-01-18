@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Paiement {
 
     @Id
