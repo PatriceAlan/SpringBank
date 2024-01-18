@@ -1,16 +1,14 @@
 package com.project.SpringBank.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,16 +28,8 @@ public class Carte {
     @JoinColumn(name = "iban")
     private Compte compteAssocie;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "carte")
     private List<Paiement> paiements;
 
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "numeroCarte = " + numeroCarte + ", " +
-                "codeSecurite = " + codeSecurite + ", " +
-                "dateExpiration = " + dateExpiration + ", " +
-                "titulaireCarte = " + titulaireCarte + ", " +
-                "compteAssocie = " + compteAssocie + ")";
-    }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Compte {
@@ -25,6 +26,7 @@ public class Compte {
     @Enumerated(EnumType.STRING)
     private TypeCompte typeCompte;
 
+    @ToString.Exclude
     @ManyToMany
     @JoinTable(name = "clientCompte", joinColumns = @JoinColumn(name = "iban"),
     inverseJoinColumns = @JoinColumn(name = "idClient"))
@@ -35,15 +37,19 @@ public class Compte {
 
     private LocalDate dateCreation;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "compte", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "compteCrediteur", cascade = CascadeType.ALL)
     private List<Virement> virementsEmis;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "compteDebiteur", cascade = CascadeType.ALL)
     private List<Virement> virementsRecus;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "compteAssocie", cascade = CascadeType.ALL)
     private List<Carte> cartes;
 
