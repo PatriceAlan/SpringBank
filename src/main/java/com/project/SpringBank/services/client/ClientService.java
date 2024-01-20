@@ -5,19 +5,23 @@ import com.project.SpringBank.repositories.ClientRepository;
 import lombok.Builder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Builder
 public class ClientService {
 
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
-    public ClientService(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
+public Client sauvegarderOuMettreAJourClient(Client client) {
+    if (client == null) {
+        throw new IllegalArgumentException("Le client ne peut pas être nul");
     }
+    if (client.getIdClient() != null) {
 
-public Client sauvegarderOuMettreAJour(Client client) {
+        return this.clientRepository.saveAndFlush(client);
+    } else {
 
         return this.clientRepository.save(Client.builder()
                 .idClient(client.getIdClient())
@@ -30,9 +34,18 @@ public Client sauvegarderOuMettreAJour(Client client) {
                 .dateCreation(client.getDateCreation())
                 .build());
     }
+}
 
     public Optional<Client> findById(Long id) {
 
+        if (id == null) {
+            throw new IllegalArgumentException("L'ID ne peut pas être nul");
+        }
+
         return this.clientRepository.findById(id);
+    }
+
+    public List<Client> findAll() {
+        return this.clientRepository.findAll();
     }
 }

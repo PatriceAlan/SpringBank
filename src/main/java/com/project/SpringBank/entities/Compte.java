@@ -24,6 +24,8 @@ public class Compte {
 
     private double solde;
 
+    private int cleRIB;
+
     @Enumerated(EnumType.STRING)
     private TypeCompte typeCompte;
 
