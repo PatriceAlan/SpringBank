@@ -18,7 +18,7 @@ public class CarteService {
         this.carteRepository = carteRepository;
     }
 
-    public Carte sauvegarderOuMettreAJour(Carte carte) {
+    public Carte ajouterCarte(Carte carte) {
 
         return this.carteRepository.save(Carte.builder()
                 .numeroCarte(carte.getNumeroCarte())
