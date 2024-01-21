@@ -36,7 +36,7 @@ public Client sauvegarderOuMettreAJourClient(Client client) {
     }
 }
 
-    public Optional<Client> findById(Long id) {
+    public Optional<Client> rechercherClient(Long id) {
 
         if (id == null) {
             throw new IllegalArgumentException("L'ID ne peut pas être nul");
@@ -45,7 +45,7 @@ public Client sauvegarderOuMettreAJourClient(Client client) {
         return this.clientRepository.findById(id);
     }
 
-    public List<Client> findAll() {
+    public List<Client> afficherTousLesClients() {
         return this.clientRepository.findAll();
     }
 }
