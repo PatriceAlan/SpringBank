@@ -8,9 +8,9 @@ import java.util.List;
 
 @Repository
 public interface VirementRepository extends JpaRepository<Virement, Long> {
-    List<Virement> findAllByCompteDestinataire_Iban(String iban);
+    List<Virement> findAllByCompteCrediteur_Iban(String iban);
 
-    List<Virement> findAllByCompteEmetteur_Iban(String iban);
+    List<Virement> findAllByCompteDebiteur_Iban(String iban);
 
 
 }

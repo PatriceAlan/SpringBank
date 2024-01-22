@@ -9,8 +9,7 @@ import java.time.LocalDate;
 /**
  * DTO for {@link com.project.SpringBank.entities.Paiement}
  */
-@EqualsAndHashCode(callSuper = true)
-@Value
+
 public record PaiementDto(Long idPaiement, int codeSecurite, double montantPaiement,
                           LocalDate datePaiement) implements Serializable {
 }

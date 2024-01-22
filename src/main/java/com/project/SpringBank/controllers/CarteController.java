@@ -22,9 +22,9 @@ public class CarteController {
     }
 
     @PostMapping("/ajouter-carte")
-    public ResponseEntity<Carte> ajouterCarte(@RequestBody Carte carte) {
+    public ResponseEntity<Carte> ajouterCarte(@RequestBody Carte carte, @RequestParam String ibanTitulaireCarte) {
         try {
-            Carte addedCarte = carteService.ajouterCarte(carte);
+            Carte addedCarte = carteService.ajouterCarte(carte, ibanTitulaireCarte);
             return new ResponseEntity<>(addedCarte, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

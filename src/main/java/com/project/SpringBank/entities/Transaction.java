@@ -31,7 +31,7 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "iban")
-    private Compte compte;
+    private Compte compteAssocie;
 
 
 }

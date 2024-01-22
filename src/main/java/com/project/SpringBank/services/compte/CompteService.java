@@ -39,14 +39,20 @@ public class CompteService {
         int cleRIB = calculerCleRIB(compte);
         compte.setCleRIB(cleRIB);
 
-        Compte nouveauCompte = Compte.builder()
-                .iban(compte.getIban())
-                .numeroCompte(compte.getNumeroCompte())
-                .solde(compte.getSolde())
-                .cleRIB(compte.getCleRIB())
-                .typeCompte(compte.getTypeCompte())
-                .intituleCompte(compte.getIntituleCompte())
-                .build();
+        Compte nouveauCompte = new Compte(
+                compte.getIban(),
+                compte.getNumeroCompte(),
+                compte.getSolde(),
+                compte.getCleRIB(),
+                compte.getTypeCompte(),
+                new HashSet<>(),
+                compte.getIntituleCompte(),
+                compte.getDateCreation(),
+                compte.getTransactions(),
+                compte.getVirementsEmis(),
+                compte.getVirementsRecus(),
+                compte.getCartes()
+        );
 
         for (Long titulaireId : titulaireIds) {
             Client client = clientService.rechercherClient(titulaireId)

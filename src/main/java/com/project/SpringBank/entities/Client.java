@@ -1,5 +1,6 @@
 package com.project.SpringBank.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -62,6 +63,7 @@ public class Client {
     private Carte carte;
 
     @ToString.Exclude
+    @JsonBackReference
     @ManyToMany(mappedBy = "clients")
     private List<Compte> comptes = new ArrayList<>();
 }

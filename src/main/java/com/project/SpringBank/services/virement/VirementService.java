@@ -38,7 +38,7 @@ public class VirementService {
             throw new IllegalArgumentException("L'iban ne peut pas être nul ou vide");
         }
 
-        return this.virementRepository.findAllByCompteEmetteur_Iban(iban);
+        return this.virementRepository.findAllByCompteDebiteur_Iban(iban);
     }
 
     public List<Virement> listerVirementsRecusSurLeCompte(String iban) {
@@ -46,7 +46,7 @@ public class VirementService {
             throw new IllegalArgumentException("L'iban ne peut pas être nul ou vide");
         }
 
-        return this.virementRepository.findAllByCompteDestinataire_Iban(iban);
+        return this.virementRepository.findAllByCompteCrediteur_Iban(iban);
     }
 
     public List<Virement> listerTousLesVirementsDuCompte(String iban) {

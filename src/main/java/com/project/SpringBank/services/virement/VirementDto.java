@@ -9,8 +9,6 @@ import java.time.LocalDate;
 /**
  * DTO for {@link com.project.SpringBank.entities.Virement}
  */
-@EqualsAndHashCode(callSuper = true)
-@Value
 public record VirementDto(Long idVirement, String libelleVirement, double montantVirement,
                           LocalDate dateVirement) implements Serializable {
 }

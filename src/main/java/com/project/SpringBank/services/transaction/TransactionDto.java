@@ -11,8 +11,6 @@ import java.time.LocalDate;
 /**
  * DTO for {@link com.project.SpringBank.entities.Transaction}
  */
-@EqualsAndHashCode(callSuper = true)
-@Value
 public record TransactionDto(Long idTransaction, TypeTransaction typeTransaction, TypeSource typeSource, Long idSource,
                              LocalDate dateTransaction, double montant) implements Serializable {
 }

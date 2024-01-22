@@ -11,9 +11,6 @@ import java.time.LocalDate;
 /**
  * DTO for {@link com.project.SpringBank.entities.Client}
  */
-@EqualsAndHashCode(callSuper = true)
-@Builder
-@Value
 public record ClientDto(Long idClient, @NotNull @NotEmpty @NotBlank String prenom,
                         @NotNull @NotEmpty @NotBlank String nom, @NotNull @Past LocalDate dateNaissance,
                         @Size(max = 100) @Email @NotBlank String email,
