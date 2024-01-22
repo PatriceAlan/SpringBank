@@ -1,5 +1,7 @@
 package com.project.SpringBank.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +25,8 @@ public class Carte {
     private LocalDate dateExpiration;
 
     @ManyToOne
+    @JsonIgnore
+    @JsonManagedReference
     private Client titulaireCarte;
 
     @ManyToOne
@@ -31,6 +35,8 @@ public class Carte {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "carte")
+    @JsonIgnore
+    @JsonManagedReference
     private List<Paiement> paiements;
 
 }
