@@ -1,8 +1,7 @@
 package com.project.SpringBank.controllers;
 
 import com.project.SpringBank.entities.Paiement;
-import com.project.SpringBank.services.paiement.PaiementDto;
-import com.project.SpringBank.services.paiement.PaiementService;
+import com.project.SpringBank.services.PaiementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

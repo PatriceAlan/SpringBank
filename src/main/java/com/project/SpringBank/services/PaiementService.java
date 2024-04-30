@@ -1,4 +1,4 @@
-package com.project.SpringBank.services.paiement;
+package com.project.SpringBank.services;
 
 import com.project.SpringBank.entities.Paiement;
 import com.project.SpringBank.repositories.PaiementRepository;

@@ -64,6 +64,6 @@ public class Client {
 
     @ToString.Exclude
     @JsonBackReference
-    @ManyToMany(mappedBy = "clients")
+    @ManyToMany(mappedBy = "titulaireCompte")
     private List<Compte> comptes = new ArrayList<>();
 }

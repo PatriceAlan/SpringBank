@@ -2,7 +2,7 @@ package com.project.SpringBank.controllers;
 
 import com.project.SpringBank.entities.Transaction;
 import com.project.SpringBank.entities.TypeSource;
-import com.project.SpringBank.services.transaction.TransactionService;
+import com.project.SpringBank.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

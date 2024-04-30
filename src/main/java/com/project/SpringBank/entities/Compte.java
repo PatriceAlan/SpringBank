@@ -37,7 +37,7 @@ public class Compte {
     @ManyToMany
     @JoinTable(name = "clientCompte", joinColumns = @JoinColumn(name = "iban"),
     inverseJoinColumns = @JoinColumn(name = "idClient"))
-    private Set<Client> clients = new HashSet<>();
+    private Set<Client> titulaireCompte = new HashSet<>();
 
     @Column(length = 100, nullable = false)
     private String intituleCompte;
@@ -45,7 +45,7 @@ public class Compte {
     private LocalDate dateCreation;
 
     public Compte() {
-        this.clients = new HashSet<>();
+        this.titulaireCompte = new HashSet<>();
     }
 
     @ToString.Exclude

@@ -1,7 +1,7 @@
 package com.project.SpringBank.controllers;
 
 import com.project.SpringBank.entities.Virement;
-import com.project.SpringBank.services.virement.VirementService;
+import com.project.SpringBank.services.VirementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/virements")
+@RequestMapping("/virements")
 public class VirementController {
 
     private final VirementService virementService;
@@ -20,7 +20,7 @@ public class VirementController {
         this.virementService = virementService;
     }
 
-    @PostMapping("/ajouter-virement")
+    @PostMapping
     public ResponseEntity<Virement> ajouterOuMettreAJourVirement(@RequestBody Virement virement) {
         try {
             Virement savedVirement = virementService.sauvegarderOuMettreAJourVirement(virement);

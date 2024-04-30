@@ -1,9 +1,9 @@
 package com.project.SpringBank.controllers;
 
+import com.project.SpringBank.DTO.carte.CreateCarteDTO;
+import com.project.SpringBank.DTO.carte.ResponseCarteDTO;
 import com.project.SpringBank.entities.Carte;
-import com.project.SpringBank.entities.Paiement;
-import com.project.SpringBank.services.carte.CarteService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.project.SpringBank.services.CarteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,65 +11,40 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/cartes")
+@RequestMapping("/cartes")
 public class CarteController {
 
     private final CarteService carteService;
 
-    @Autowired
-    public CarteController(CarteService carteService) {
+    public  CarteController(CarteService carteService) {
         this.carteService = carteService;
     }
 
-    @PostMapping("/ajouter-carte")
-    public ResponseEntity<Carte> ajouterCarte(@RequestBody Carte carte, @RequestParam String ibanTitulaireCarte) {
-        try {
-            Carte addedCarte = carteService.ajouterCarte(carte, ibanTitulaireCarte);
-            return new ResponseEntity<>(addedCarte, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    @PostMapping
+    public ResponseEntity<ResponseCarteDTO> createCarte(@RequestBody CreateCarteDTO carteDTO){
+        ResponseCarteDTO createdCarte = mapCarteToResponseDTO(carteService.createCarte(carteDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCarte);
     }
 
-    @GetMapping("/{numeroCarte}")
-    public ResponseEntity<Carte> rechercherCarteParNumero(@PathVariable Long numeroCarte) {
-        try {
-            Carte carte = carteService.rechercherCarte(numeroCarte);
-            return carte != null
-                    ? new ResponseEntity<>(carte, HttpStatus.OK)
-                    : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseCarteDTO mapCarteToResponseDTO(Carte carte){
+        return ResponseCarteDTO.builder()
+                .numeroCarte(carte.getNumeroCarte())
+                .dateExpiration(carte.getDateExpiration())
+                .titulaireCarte(carte.getTitulaireCarte())
+                .build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ResponseCarteDTO>> listCartes(){
+        List<ResponseCarteDTO> cartes = carteService.listCartes();
+        return ResponseEntity.ok(cartes);
     }
 
     @DeleteMapping("/{numeroCarte}")
-    public ResponseEntity<Void> supprimerCarte(@PathVariable Long numeroCarte) {
-        try {
-            carteService.supprimerCarte(numeroCarte);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Void> deleteCarte(@PathVariable Long numeroCarte){
+        carteService.deleteCarte(numeroCarte);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/compte/{iban}")
-    public ResponseEntity<List<Carte>> listerCartesDuCompte(@PathVariable String iban) {
-        try {
-            List<Carte> cartes = carteService.listerCartesDuCompte(iban);
-            return new ResponseEntity<>(cartes, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
 
-    @GetMapping("/paiements/{numeroCarte}")
-    public ResponseEntity<List<Paiement>> listerPaiementsDeLaCarte(@PathVariable Long numeroCarte) {
-        try {
-            List<Paiement> paiements = carteService.listerPaiementsDeLaCarte(numeroCarte);
-            return new ResponseEntity<>(paiements, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
 }

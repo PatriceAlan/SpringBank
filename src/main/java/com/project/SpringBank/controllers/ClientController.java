@@ -1,50 +1,78 @@
 package com.project.SpringBank.controllers;
 
+import com.project.SpringBank.DTO.client.CreateClientDTO;
+import com.project.SpringBank.DTO.client.ResponseClientDTO;
+import com.project.SpringBank.DTO.client.UpdateClientDTO;
 import com.project.SpringBank.entities.Client;
-import com.project.SpringBank.services.client.ClientService;
+import com.project.SpringBank.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/clients")
+@RequestMapping("/clients")
 public class ClientController {
 
     private final ClientService clientService;
+
 
     @Autowired
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
 
-    @PostMapping("/ajouter-client")
-    public ResponseEntity<Client> ajouterOuMettreAJourClient(@RequestBody Client client) {
-        try {
-            Client savedClient = clientService.sauvegarderOuMettreAJourClient(client);
-            return new ResponseEntity<>(savedClient, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    @PostMapping
+    public ResponseEntity<ResponseClientDTO> createClient(@RequestBody CreateClientDTO clientDTO) {
+        ResponseClientDTO createdClient = mapClientToResponseDTO(clientService.createClient(clientDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdClient);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Client> rechercherClientParId(@PathVariable Long id) {
-        try {
-            Optional<Client> client = clientService.rechercherClient(id);
-            return client.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateClientDTO> updateClient(@PathVariable Long id, @RequestBody UpdateClientDTO clientDTO) {
+        UpdateClientDTO updatedClient = mapClientToUpdateDTO(clientService.updateClient(id, clientDTO));
+        return ResponseEntity.ok(updatedClient);
     }
 
-    @GetMapping("/tous-les-clients")
-    public ResponseEntity<List<Client>> afficherTousLesClients() {
-        List<Client> clients = clientService.afficherTousLesClients();
-        return new ResponseEntity<>(clients, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<ResponseClientDTO>> listClients() {
+        List<ResponseClientDTO> clients = clientService.listClients();
+        return ResponseEntity.ok(clients);
     }
+
+
+    public ResponseClientDTO mapClientToResponseDTO(Client client) {
+        return ResponseClientDTO.builder()
+                .id(client.getIdClient())
+                .prenom(client.getPrenom())
+                .nom(client.getNom())
+                .dateNaissance(client.getDateNaissance())
+                .email(client.getEmail())
+                .numeroTelephone(client.getNumeroTelephone())
+                .adressePostale(client.getAdressePostale())
+                .dateCreation(client.getDateCreation())
+                .build();
+    }
+    public UpdateClientDTO mapClientToUpdateDTO(Client client) {
+        return UpdateClientDTO.builder()
+                .idClient(client.getIdClient())
+                .prenom(client.getPrenom())
+                .nom(client.getNom())
+                .dateNaissance(client.getDateNaissance())
+                .email(client.getEmail())
+                .numeroTelephone(client.getNumeroTelephone())
+                .adressePostale(client.getAdressePostale())
+                .dateCreation(client.getDateCreation())
+                .build();
+    }
+
+
+
 }
+
+
+
+
+

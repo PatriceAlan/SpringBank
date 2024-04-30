@@ -1,4 +1,4 @@
-package com.project.SpringBank.services.virement;
+package com.project.SpringBank.services;
 
 import com.project.SpringBank.entities.Virement;
 import com.project.SpringBank.repositories.VirementRepository;

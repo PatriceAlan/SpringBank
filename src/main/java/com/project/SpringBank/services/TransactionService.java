@@ -1,4 +1,4 @@
-package com.project.SpringBank.services.transaction;
+package com.project.SpringBank.services;
 
 import com.project.SpringBank.entities.Transaction;
 import com.project.SpringBank.entities.TypeSource;
