@@ -1,6 +1,5 @@
 package com.project.SpringBank.services;
 
-import com.project.SpringBank.DTO.client.UpdateClientDTO;
 import com.project.SpringBank.DTO.client.CreateClientDTO;
 import com.project.SpringBank.DTO.client.ResponseClientDTO;
 import com.project.SpringBank.entities.Client;
@@ -36,7 +35,7 @@ public class ClientService {
     }
 
     @Transactional
-    public Client updateClient(Long id, UpdateClientDTO clientDTO) {
+    public Client updateClient(Long id, ResponseClientDTO clientDTO) {
         Optional<Client> clientOptional = clientRepository.findById(id);
         if (clientOptional.isEmpty()) {
             throw new IllegalArgumentException("Le client n'existe pas");
@@ -64,7 +63,7 @@ public class ClientService {
 
     public ResponseClientDTO mapClientToResponseDTO(Client client) {
         return ResponseClientDTO.builder()
-                .id(client.getIdClient())
+                .idClient(client.getIdClient())
                 .prenom(client.getPrenom())
                 .nom(client.getNom())
                 .dateNaissance(client.getDateNaissance())

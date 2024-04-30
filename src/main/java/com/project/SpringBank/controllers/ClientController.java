@@ -2,7 +2,6 @@ package com.project.SpringBank.controllers;
 
 import com.project.SpringBank.DTO.client.CreateClientDTO;
 import com.project.SpringBank.DTO.client.ResponseClientDTO;
-import com.project.SpringBank.DTO.client.UpdateClientDTO;
 import com.project.SpringBank.entities.Client;
 import com.project.SpringBank.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,8 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UpdateClientDTO> updateClient(@PathVariable Long id, @RequestBody UpdateClientDTO clientDTO) {
-        UpdateClientDTO updatedClient = mapClientToUpdateDTO(clientService.updateClient(id, clientDTO));
+    public ResponseEntity<ResponseClientDTO> updateClient(@PathVariable Long id, @RequestBody ResponseClientDTO clientDTO) {
+        ResponseClientDTO updatedClient = mapClientToResponseDTO(clientService.updateClient(id, clientDTO));
         return ResponseEntity.ok(updatedClient);
     }
 
@@ -45,18 +44,6 @@ public class ClientController {
 
     public ResponseClientDTO mapClientToResponseDTO(Client client) {
         return ResponseClientDTO.builder()
-                .id(client.getIdClient())
-                .prenom(client.getPrenom())
-                .nom(client.getNom())
-                .dateNaissance(client.getDateNaissance())
-                .email(client.getEmail())
-                .numeroTelephone(client.getNumeroTelephone())
-                .adressePostale(client.getAdressePostale())
-                .dateCreation(client.getDateCreation())
-                .build();
-    }
-    public UpdateClientDTO mapClientToUpdateDTO(Client client) {
-        return UpdateClientDTO.builder()
                 .idClient(client.getIdClient())
                 .prenom(client.getPrenom())
                 .nom(client.getNom())
@@ -67,6 +54,7 @@ public class ClientController {
                 .dateCreation(client.getDateCreation())
                 .build();
     }
+
 
 
 

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Builder
 public class ResponseClientDTO {
 
-    private Long id;
+    private Long idClient;
     private String prenom;;
     private String nom;
     private LocalDate dateNaissance;
