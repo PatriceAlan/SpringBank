@@ -19,12 +19,12 @@ public class Virement {
     private Long idVirement;
 
     @ManyToOne
-    @JoinColumn(name = "ibanCompteCrediteur")
-    private Compte compteCrediteur;
+    @JoinColumn(name = "ibanCompteEmetteur")
+    private Compte compteEmetteur;
 
     @ManyToOne
-    @JoinColumn(name = "ibanCompteDebiteur")
-    private Compte compteDebiteur;
+    @JoinColumn(name = "ibanCompteBeneficiaire")
+    private Compte compteBeneficiaire;
 
     private String libelleVirement;
 

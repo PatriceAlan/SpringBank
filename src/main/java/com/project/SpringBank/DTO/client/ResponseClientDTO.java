@@ -3,6 +3,7 @@ package com.project.SpringBank.DTO.client;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,6 +19,6 @@ public class ResponseClientDTO {
     private String email;
     private String numeroTelephone;
     private String adressePostale;
-    private LocalDate dateCreation;
+    private LocalDateTime dateCreation;
 
 }

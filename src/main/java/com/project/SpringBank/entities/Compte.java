@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Set;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class Compte {
     @Column(length = 100, nullable = false)
     private String intituleCompte;
 
-    private LocalDate dateCreation;
+    private LocalDateTime dateCreation;
 
     public Compte() {
         this.titulaireCompte = new HashSet<>();
@@ -53,11 +53,11 @@ public class Compte {
     private List<Transaction> transactions;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "compteCrediteur", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "compteEmetteur", cascade = CascadeType.ALL)
     private List<Virement> virementsEmis;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "compteDebiteur", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "compteBeneficiaire", cascade = CascadeType.ALL)
     private List<Virement> virementsRecus;
 
     @ToString.Exclude

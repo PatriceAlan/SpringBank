@@ -4,7 +4,7 @@ import com.project.SpringBank.entities.Client;
 import com.project.SpringBank.entities.TypeCompte;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Builder
@@ -21,5 +21,5 @@ public class CreateCompteDTO {
     private TypeCompte typeCompte;
     private Set<Client> titulaireCompte;
     private String intituleCompte;
-    private LocalDate dateCreation;
+    private LocalDateTime dateCreation;
 }

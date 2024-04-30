@@ -9,6 +9,7 @@ import lombok.Builder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class ClientService {
                 .email(clientDTO.getEmail())
                 .numeroTelephone(clientDTO.getNumeroTelephone())
                 .adressePostale(clientDTO.getAdressePostale())
-                .dateCreation(LocalDate.now())
+                .dateCreation(LocalDateTime.now())
                 .build();
 
         return clientRepository.save(client);
@@ -49,7 +50,7 @@ public class ClientService {
         client.setEmail(clientDTO.getEmail());
         client.setNumeroTelephone(clientDTO.getNumeroTelephone());
         client.setAdressePostale(clientDTO.getAdressePostale());
-        client.setDateCreation(LocalDate.now());
+        client.setDateCreation(LocalDateTime.now());
 
         return clientRepository.save(client);
     }

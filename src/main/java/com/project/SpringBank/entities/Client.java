@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class Client {
 
     @PastOrPresent
     @Temporal(TemporalType.DATE)
-    private LocalDate dateCreation;
+    private LocalDateTime dateCreation;
 
 
     @ManyToOne
