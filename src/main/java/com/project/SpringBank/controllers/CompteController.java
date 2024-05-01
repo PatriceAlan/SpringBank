@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -54,11 +55,16 @@ public class CompteController {
     }
 
     public ResponseCompteDTO mapCompteToResponseDTO(Compte compte){
+
+        Set<Long> titulaires = new HashSet<>();
+        for (Client client : compte.getTitulaireCompte()) {
+            titulaires.add(client.getIdClient());
+        }
         return ResponseCompteDTO.builder()
                 .iban(compte.getIban())
                 .numeroCompte(compte.getNumeroCompte())
                 .typeCompte(compte.getTypeCompte().name())
-                .titulaireCompte(compte.getTitulaireCompte())
+                .titulaireCompte(titulaires)
                 .intituleCompte(compte.getIntituleCompte())
                 .dateCreation(compte.getDateCreation())
                 .build();

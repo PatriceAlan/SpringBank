@@ -54,11 +54,16 @@ public class CompteService {
 
 
     public ResponseCompteDTO mapCompteToResponseDTO(Compte compte){
+
+        Set<Long> titulaires = new HashSet<>();
+        for (Client client : compte.getTitulaireCompte()) {
+            titulaires.add(client.getIdClient());
+        }
         return ResponseCompteDTO.builder()
                 .iban(compte.getIban())
                 .numeroCompte(compte.getNumeroCompte())
                 .typeCompte(compte.getTypeCompte().name())
-                .titulaireCompte(compte.getTitulaireCompte())
+                .titulaireCompte(titulaires)
                 .intituleCompte(compte.getIntituleCompte())
                 .dateCreation(compte.getDateCreation())
                 .build();

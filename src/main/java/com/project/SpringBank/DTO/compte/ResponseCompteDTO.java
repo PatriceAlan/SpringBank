@@ -1,6 +1,5 @@
 package com.project.SpringBank.DTO.compte;
 
-import com.project.SpringBank.entities.Client;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,7 +15,7 @@ public class ResponseCompteDTO {
     private String iban;
     private Long numeroCompte;
     private String typeCompte;
-    private Set<Client> titulaireCompte;
+    private Set<Long> titulaireCompte;
     private String intituleCompte;
     private LocalDateTime dateCreation;
 }
