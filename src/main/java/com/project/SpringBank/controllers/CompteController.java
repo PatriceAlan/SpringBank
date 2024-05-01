@@ -41,9 +41,11 @@ public class CompteController {
 
     @PostMapping
     public ResponseEntity<ResponseCompteDTO> createCompte(@RequestBody CreateCompteDTO compteDTO) {
-        ResponseCompteDTO createdCompte = compteService.mapCompteToResponseDTO(compteService.createCompte(compteDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCompte);
+        Compte createdCompte = compteService.createCompte(compteDTO);
+        ResponseCompteDTO responseCompteDTO = mapCompteToResponseDTO(createdCompte);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseCompteDTO);
     }
+
 
     @GetMapping
     public ResponseEntity<List<ResponseCompteDTO>> listComptes() {
@@ -51,16 +53,16 @@ public class CompteController {
         return ResponseEntity.ok(comptes);
     }
 
-//    public ResponseCompteDTO mapCompteToResponseDTO(Compte compte){
-//        return ResponseCompteDTO.builder()
-//                .iban(compte.getIban())
-//                .numeroCompte(compte.getNumeroCompte())
-//                .typeCompte(compte.getTypeCompte().name())
-//                .titulaireCompte(compte.getTitulaireCompte())
-//                .intituleCompte(compte.getIntituleCompte())
-//                .dateCreation(compte.getDateCreation())
-//                .build();
-//    }
+    public ResponseCompteDTO mapCompteToResponseDTO(Compte compte){
+        return ResponseCompteDTO.builder()
+                .iban(compte.getIban())
+                .numeroCompte(compte.getNumeroCompte())
+                .typeCompte(compte.getTypeCompte().name())
+                .titulaireCompte(compte.getTitulaireCompte())
+                .intituleCompte(compte.getIntituleCompte())
+                .dateCreation(compte.getDateCreation())
+                .build();
+    }
 
     @GetMapping("/{iban}")
     public ResponseEntity<ResponseCompteDTO> getCompteByIban(@PathVariable String iban) {

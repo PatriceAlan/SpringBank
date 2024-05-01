@@ -1,11 +1,10 @@
 package com.project.SpringBank.DTO.compte;
 
-import com.project.SpringBank.entities.Client;
 import com.project.SpringBank.entities.TypeCompte;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Builder
 @Getter
@@ -19,7 +18,7 @@ public class CreateCompteDTO {
     private double solde;
     private int cleRIB;
     private TypeCompte typeCompte;
-    private Set<Client> titulaireCompte;
+    private List<Long> titulaireCompte; // Liste d'IDs de clients
     private String intituleCompte;
     private LocalDateTime dateCreation;
 }

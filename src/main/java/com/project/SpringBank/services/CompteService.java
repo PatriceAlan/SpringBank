@@ -20,24 +20,29 @@ import java.util.Set;
 public class CompteService {
 
     private final CompteRepository compteRepository;
-    private final ClientService clientService;
-
     private static final String CODE_BANQUE = "30003";
     private static final String CODE_GUICHET = "02054";
+    private final ClientRepository clientRepository;
 
-    public CompteService(CompteRepository compteRepository, ClientService clientService) {
+    public CompteService(CompteRepository compteRepository, ClientRepository clientRepository) {
         this.compteRepository = compteRepository;
-        this.clientService = clientService;
+        this.clientRepository = clientRepository;
     }
 
     public Compte createCompte(CreateCompteDTO createCompteDTO) {
+        // Recherche des clients par leur ID
+        Set<Client> titulaires = new HashSet<>();
+        for (Long clientId : createCompteDTO.getTitulaireCompte()) {
+            Optional<Client> existingClient = clientRepository.getClientByIdClient(clientId);
+            existingClient.ifPresent(titulaires::add);
+        }
 
         Compte compte = Compte.builder()
                 .numeroCompte(createCompteDTO.getNumeroCompte())
                 .solde(createCompteDTO.getSolde())
                 .cleRIB(calculerCleRIB(createCompteDTO))
                 .typeCompte(createCompteDTO.getTypeCompte())
-                .titulaireCompte(new HashSet<>(createCompteDTO.getTitulaireCompte()))
+                .titulaireCompte(titulaires) // Utilisez les clients trouvés
                 .intituleCompte(createCompteDTO.getIntituleCompte())
                 .dateCreation(LocalDateTime.now())
                 .iban(genererIBAN(createCompteDTO))
@@ -45,6 +50,7 @@ public class CompteService {
 
         return compteRepository.save(compte);
     }
+
 
 
     public ResponseCompteDTO mapCompteToResponseDTO(Compte compte){
