@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -17,9 +16,6 @@ public class Paiement {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idPaiement;
 
-    @ManyToOne
-    @JoinColumn(name = "numeroCarte")
-    private Carte carte;
 
     private int codeSecurite;
 
@@ -29,5 +25,9 @@ public class Paiement {
 
     private Long idTransaction;
 
-    
+
+    @ManyToOne
+    @JoinColumn(name = "carte_numero_carte")
+    private Carte carte;
+
 }

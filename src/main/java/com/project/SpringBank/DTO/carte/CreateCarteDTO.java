@@ -1,6 +1,5 @@
 package com.project.SpringBank.DTO.carte;
 
-import com.project.SpringBank.entities.Client;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -12,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CreateCarteDTO {
 
-    private Client titulaireCarte;
+    private Long titulaireCarte;
     private Long numeroCarte;
     private LocalDate dateExpiration;
     private int codeSecurite;

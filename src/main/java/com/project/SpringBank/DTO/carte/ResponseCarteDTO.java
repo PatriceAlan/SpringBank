@@ -12,9 +12,10 @@ import java.time.LocalDate;
 @Setter
 public class ResponseCarteDTO {
 
+    private Long titulaireCarte;
     private Long numeroCarte;
     private LocalDate dateExpiration;
-    private Client titulaireCarte;
+
 
 
 }

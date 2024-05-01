@@ -13,7 +13,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -62,8 +61,7 @@ public class Client {
     @JoinColumn
     private Carte carte;
 
-    @ToString.Exclude
-    @JsonBackReference
+
     @ManyToMany(mappedBy = "titulaireCompte")
     private List<Compte> comptes = new ArrayList<>();
 }

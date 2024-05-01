@@ -101,8 +101,8 @@ public class CompteController {
         // Créer une carte pour le compte
         Carte carte = carteService.createCarte(carteDTO);
 
-        // Définir le compte associé à la carte
-        carte.setCompteAssocie(compte);
+        compte.getCartes().add(carte);
+        compteRepository.save(compte);
 
         // Mapper la carte créée à votre DTO de réponse pour la carte
         ResponseCarteDTO responseCarteDTO = carteService.mapCarteToResponseDTO(carte);

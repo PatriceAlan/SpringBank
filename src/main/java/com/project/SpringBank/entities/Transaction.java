@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -30,7 +29,7 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "iban")
-    private Compte compteAssocie;
+    private Compte compteTransactions;
 
 
 }

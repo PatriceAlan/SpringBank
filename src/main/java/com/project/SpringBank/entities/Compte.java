@@ -14,7 +14,6 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @Builder
 public class Compte {
@@ -32,11 +31,9 @@ public class Compte {
     private TypeCompte typeCompte;
 
 
-    @JsonIgnore
-    @ToString.Exclude
-    @JsonManagedReference
+
     @ManyToMany
-    @JoinTable(name = "clientCompte", joinColumns = @JoinColumn(name = "iban"),
+    @JoinTable(name = "clientCompte",
     inverseJoinColumns = @JoinColumn(name = "idClient"))
     private Set<Client> titulaireCompte;
 
@@ -49,12 +46,9 @@ public class Compte {
         this.titulaireCompte = new HashSet<>();
     }
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "compteAssocie", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "compteTransactions", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 
-
-    @ToString.Exclude
     @OneToMany(mappedBy = "compteAssocie", cascade = CascadeType.ALL)
     private List<Carte> cartes;
 

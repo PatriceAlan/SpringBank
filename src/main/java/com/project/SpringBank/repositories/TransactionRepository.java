@@ -9,6 +9,4 @@ import java.util.List;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    List<Transaction> findAllByCompteAssocie_Iban(String iban);
-    List<Transaction> findAllByTypeSource(TypeSource typeSource);
 }

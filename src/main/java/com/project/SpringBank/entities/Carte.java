@@ -1,5 +1,6 @@
 package com.project.SpringBank.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -27,9 +28,10 @@ public class Carte {
     private Client titulaireCarte;
 
     @ManyToOne
-    @JoinColumn(name = "iban")
+    @JoinTable(name = "carteCompte",
+            joinColumns = @JoinColumn(name = "numeroCarte"),
+            inverseJoinColumns = @JoinColumn(name = "iban"))
     private Compte compteAssocie;
-
 
     @OneToMany(mappedBy = "carte")
     private List<Paiement> paiements;
