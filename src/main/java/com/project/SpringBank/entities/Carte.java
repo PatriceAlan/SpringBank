@@ -25,18 +25,14 @@ public class Carte {
     private LocalDate dateExpiration;
 
     @ManyToOne
-    @JsonIgnore
-    @JsonManagedReference
     private Client titulaireCarte;
 
     @ManyToOne
     @JoinColumn(name = "iban")
     private Compte compteAssocie;
 
-    @ToString.Exclude
+
     @OneToMany(mappedBy = "carte")
-    @JsonIgnore
-    @JsonManagedReference
     private List<Paiement> paiements;
 
 }

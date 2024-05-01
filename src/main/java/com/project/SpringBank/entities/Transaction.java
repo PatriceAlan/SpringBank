@@ -2,7 +2,7 @@ package com.project.SpringBank.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -23,11 +23,10 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TypeSource typeSource;
 
-    private Long idSource;
 
-    private LocalDate dateTransaction;
+    private LocalDateTime dateTransaction;
 
-    private double montant;
+    private double montantTransaction;
 
     @ManyToOne
     @JoinColumn(name = "iban")

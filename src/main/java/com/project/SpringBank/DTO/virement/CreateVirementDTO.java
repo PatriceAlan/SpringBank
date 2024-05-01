@@ -3,7 +3,7 @@ package com.project.SpringBank.DTO.virement;
 import com.project.SpringBank.entities.Compte;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -12,9 +12,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CreateVirementDTO {
 
-    private Compte ibanCompteEmetteur;
-    private Compte CompteBeneficiaire;
-    private double montant;
+    private String ibanCompteEmetteur;
+    private String ibanCompteBeneficiaire;
+    private double montantVirement;
     private String libelleVirement;
-    private LocalDate dateVirement;
+    private LocalDateTime dateVirement;
 }

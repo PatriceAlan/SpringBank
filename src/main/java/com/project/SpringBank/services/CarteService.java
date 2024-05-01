@@ -41,8 +41,4 @@ public class CarteService {
                 .build();
     }
 
-    public void deleteCarte(Long numeroCarte){
-        carteRepository.deleteById(numeroCarte);
-    }
-
 }

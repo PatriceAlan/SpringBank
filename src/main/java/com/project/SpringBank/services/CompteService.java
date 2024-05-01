@@ -3,15 +3,17 @@ package com.project.SpringBank.services;
 import com.project.SpringBank.DTO.compte.CreateCompteDTO;
 import com.project.SpringBank.DTO.compte.ResponseCompteDTO;
 import com.project.SpringBank.entities.*;
+import com.project.SpringBank.repositories.ClientRepository;
 import com.project.SpringBank.repositories.CompteRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Builder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Builder
@@ -37,7 +39,7 @@ public class CompteService {
                 .typeCompte(createCompteDTO.getTypeCompte())
                 .titulaireCompte(new HashSet<>(createCompteDTO.getTitulaireCompte()))
                 .intituleCompte(createCompteDTO.getIntituleCompte())
-                .dateCreation(LocalDate.now())
+                .dateCreation(LocalDateTime.now())
                 .iban(genererIBAN(createCompteDTO))
                 .build();
 
@@ -74,50 +76,12 @@ public class CompteService {
                 + 3 * Integer.parseInt(numeroCompteAsString)) % 97;
     }
 
-
-    public List<Transaction> listerTransactionsDuCompte(String iban) {
-        if (iban == null) {
-            throw new IllegalArgumentException("L'IBAN ne peut pas être nul");
+    public Set<Client> getTitulaireCompte(String iban) {
+        Optional<Compte> compte = compteRepository.findById(iban);
+        if (compte.isEmpty()) {
+            throw new EntityNotFoundException("Le compte n'existe pas");
         }
-
-        Optional<Compte> compteOptional = compteRepository.findById(iban);
-
-        if (compteOptional.isPresent()) {
-            Compte compte = compteOptional.get();
-            return compte.getTransactions();
-        } else {
-            throw new EntityNotFoundException("Compte non trouvé avec l'IBAN : " + iban);
-        }
-    }
-
-    public List<Virement> listerVirementsEmisDuCompte(String iban) {
-        if (iban == null) {
-            throw new IllegalArgumentException("L'IBAN ne peut pas être nul");
-        }
-
-        Optional<Compte> compteOptional = compteRepository.findById(iban);
-
-        if (compteOptional.isPresent()) {
-            Compte compte = compteOptional.get();
-            return compte.getVirementsEmis();
-        } else {
-            throw new EntityNotFoundException("Compte non trouvé avec l'IBAN : " + iban);
-        }
-    }
-
-    public List<Virement> listerVirementsRecusDuCompte(String iban) {
-        if (iban == null) {
-            throw new IllegalArgumentException("L'IBAN ne peut pas être nul");
-        }
-
-        Optional<Compte> compteOptional = compteRepository.findById(iban);
-
-        if (compteOptional.isPresent()) {
-            Compte compte = compteOptional.get();
-            return compte.getVirementsRecus();
-        } else {
-            throw new EntityNotFoundException("Compte non trouvé avec l'IBAN : " + iban);
-        }
+        return compte.get().getTitulaireCompte();
     }
 
 

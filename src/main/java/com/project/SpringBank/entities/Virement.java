@@ -3,7 +3,7 @@ package com.project.SpringBank.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -18,17 +18,19 @@ public class Virement {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idVirement;
 
-    @ManyToOne
-    @JoinColumn(name = "ibanCompteEmetteur")
-    private Compte compteEmetteur;
+    @Column(name = "ibanCompteEmetteur")
+    private String ibanCompteEmetteur;
 
-    @ManyToOne
-    @JoinColumn(name = "ibanCompteBeneficiaire")
-    private Compte compteBeneficiaire;
+    @Column(name = "ibanCompteBeneficiaire")
+    private String ibanCompteBeneficiaire;
 
     private String libelleVirement;
 
     private double montantVirement;
 
-    private LocalDate dateVirement;
+    private LocalDateTime dateVirement;
+
+    @OneToOne
+    private Transaction transaction;
+
 }

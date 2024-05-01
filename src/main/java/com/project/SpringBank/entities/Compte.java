@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +38,7 @@ public class Compte {
     @ManyToMany
     @JoinTable(name = "clientCompte", joinColumns = @JoinColumn(name = "iban"),
     inverseJoinColumns = @JoinColumn(name = "idClient"))
-    private Set<Client> titulaireCompte = new HashSet<>();
+    private Set<Client> titulaireCompte;
 
     @Column(length = 100, nullable = false)
     private String intituleCompte;
@@ -52,13 +53,6 @@ public class Compte {
     @OneToMany(mappedBy = "compteAssocie", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "compteEmetteur", cascade = CascadeType.ALL)
-    private List<Virement> virementsEmis;
-
-    @ToString.Exclude
-    @OneToMany(mappedBy = "compteBeneficiaire", cascade = CascadeType.ALL)
-    private List<Virement> virementsRecus;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "compteAssocie", cascade = CascadeType.ALL)
