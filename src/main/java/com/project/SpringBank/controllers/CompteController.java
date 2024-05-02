@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -72,8 +73,11 @@ public class CompteController {
 
     @GetMapping("/{iban}")
     public ResponseEntity<ResponseCompteDTO> getCompteByIban(@PathVariable String iban) {
-        ResponseCompteDTO compte = compteRepository.getCompteByIban(iban);
-        return ResponseEntity.ok(compte);
+        Optional<Compte> compteOptional = compteRepository.findByIban(iban);
+        Compte compte = compteOptional.orElse(null);
+        assert compte != null;
+        ResponseCompteDTO responseCompteDTO = compteService.mapCompteToResponseDTO(compte);
+        return ResponseEntity.ok(responseCompteDTO);
     }
 
     @GetMapping("/{iban}/titulaires")
@@ -92,17 +96,16 @@ public class CompteController {
     public ResponseEntity<ResponseCarteDTO> createCarteForCompte(@PathVariable String iban, @RequestBody CreateCarteDTO carteDTO) {
 
         // Vérifiez si le compte avec l'IBAN donné existe
-        Compte compte = compteRepository.findById(iban).orElse(null);
+        Compte compte = compteRepository.findByIban(iban).orElse(null);
         if (compte == null) {
+
             System.out.println("Le compte avec l'IBAN donné n'existe pas");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         // Créer une carte pour le compte
-        Carte carte = carteService.createCarte(carteDTO);
+        Carte carte = carteService.createCarte(carteDTO, iban);
 
-        compte.getCartes().add(carte);
-        compteRepository.save(compte);
 
         // Mapper la carte créée à votre DTO de réponse pour la carte
         ResponseCarteDTO responseCarteDTO = carteService.mapCarteToResponseDTO(carte);

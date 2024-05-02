@@ -57,9 +57,8 @@ public class Client {
     private LocalDateTime dateCreation;
 
 
-    @ManyToOne
-    @JoinColumn
-    private Carte carte;
+    @OneToMany(mappedBy = "titulaireCarte")
+    private List<Carte> cartes = new ArrayList<>();
 
 
     @ManyToMany(mappedBy = "titulaireCompte")

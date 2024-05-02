@@ -31,7 +31,6 @@ public class Compte {
     private TypeCompte typeCompte;
 
 
-
     @ManyToMany
     @JoinTable(name = "clientCompte",
     inverseJoinColumns = @JoinColumn(name = "idClient"))

@@ -1,5 +1,6 @@
 package com.project.SpringBank.DTO.carte;
 
+import com.project.SpringBank.entities.Compte;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,5 +16,6 @@ public class CreateCarteDTO {
     private Long numeroCarte;
     private LocalDate dateExpiration;
     private int codeSecurite;
+    private String compteAssocie;
 
 }

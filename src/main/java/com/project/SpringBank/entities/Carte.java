@@ -28,9 +28,6 @@ public class Carte {
     private Client titulaireCarte;
 
     @ManyToOne
-    @JoinTable(name = "carteCompte",
-            joinColumns = @JoinColumn(name = "numeroCarte"),
-            inverseJoinColumns = @JoinColumn(name = "iban"))
     private Compte compteAssocie;
 
     @OneToMany(mappedBy = "carte")
