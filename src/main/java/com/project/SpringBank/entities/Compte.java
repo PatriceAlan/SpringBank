@@ -49,6 +49,7 @@ public class Compte {
     private List<Transaction> transactions;
 
     @OneToMany(mappedBy = "compteAssocie", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Carte> cartes;
 
 

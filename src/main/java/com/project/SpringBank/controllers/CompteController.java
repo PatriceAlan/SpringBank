@@ -16,10 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/comptes")
@@ -87,9 +84,20 @@ public class CompteController {
     }
 
     @GetMapping("/{iban}/cartes")
-    public List<Carte> getCartesByIban(@PathVariable String iban) {
+    public List<ResponseCarteDTO> getCartesByIban(@PathVariable String iban) {
         Compte compte = compteRepository.findById(iban).orElseThrow();
-        return compte.getCartes();
+        List<Carte> cartes = compte.getCartes();
+        List<ResponseCarteDTO> cartesDTO = new ArrayList<>();
+        for (Carte carte : cartes) {
+            ResponseCarteDTO carteDTO = new ResponseCarteDTO();
+            carteDTO.setTitulaireCarte(carte.getTitulaireCarte().getIdClient());
+            carteDTO.setNumeroCarte(carte.getNumeroCarte());
+            carteDTO.setDateExpiration(carte.getDateExpiration());
+
+            cartesDTO.add(carteDTO);
+        }
+
+        return cartesDTO;
     }
 
     @PostMapping("/{iban}/cartes")
