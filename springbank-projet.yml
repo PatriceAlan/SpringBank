@@ -1,0 +1,720 @@
+openapi: 3.0.3
+info:
+  title: Système bancaire simplifiée 3.0
+  description: |-
+    Ceci est le contrat de service de notre système bancaire simplifiée
+    Il a été mis en place lors d'un atelier de conception avec les consommateurs et les producteurs.
+    Il est important de respecter ce contrat de service au niveau des url, entrée et service
+    et des différents codes retours
+  contact:
+    email: pietrzak.aurelien@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Retrouvez le sujet du projet.
+  url: https://docs.google.com/document/d/1jxZi0huyw7pC8Bd7TfZZPiHIJ5kuyVZFaBkfAYsSeLo/edit?usp=sharing
+servers:
+  - url: http://locahost:8080
+tags:
+  - name: clients
+    description: Les differents web services des clients.
+  - name: comptes
+    description: Les differents web services des comptes.
+  - name: virements
+    description: Les differents web services des virements.
+paths:
+  /clients:
+    get:
+      tags:
+        - clients
+      summary: Recuperation des clients en fonction des paramètres donnés en entrée
+      description: Retourne un ensemble de clients
+      operationId: getClients
+      parameters:
+        - name: nom
+          in: query
+          description: Critère de recherche nom du client
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: prenom
+          in: query
+          description: Critère de recherche prenom du client
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: Des clients ont été trouvés avec les critères
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/GetClientReponse'
+        '204':
+          description: Aucune donnée à renvoyer
+        '400':
+          description: Les donnnées en entrée du service sont non renseignes ou incorrectes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+        '500':
+          description: Une erreur de traitement a été rencontrée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+    post:
+      tags:
+        - clients
+      summary: Creation d'un nouveau client dans le système bancaire
+      description: Creation d'un nouveau client dans le système bancaire
+      operationId: creerClient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreationClientRequest'
+        required: true
+      responses:
+        '201':
+          description: Le client a correctement été créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreationClientReponse'          
+        '400':
+          description: Les donnnées en entrée du service sont non renseignes ou incorrectes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+        '500':
+          description: Une erreur de traitement a été rencontrée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+    put:
+      tags:
+        - clients
+      summary: Modification d'un client dans le système bancaire
+      description: Modification d'un client dans le système bancaire
+      operationId: updateClient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateClientRequest'
+        required: true
+      responses:
+        '200':
+          description: Le client a bien été mis à jour
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateClientReponse'          
+        '400':
+          description: Les donnnées en entrée du service sont non renseignes ou incorrectes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+        '500':
+          description: Une erreur de traitement a été rencontrée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+          
+  /comptes:
+    get:
+      tags:
+        - comptes
+      summary: Recuperation des comptes d'un client
+      description: Recuperation des comptes d'un client
+      operationId: getComptes
+      parameters:
+        - name: identifiantClient
+          in: query
+          description: Critère de recherche identifiant du client
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Les comptes du client
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/GetComptesResponse'
+        '204':
+          description: Aucune donnée à renvoyer
+        '400':
+          description: Les donnnées en entrée du service sont non renseignes ou incorrectes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+        '500':
+          description: Une erreur de traitement a été rencontrée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+    post:
+      tags:
+        - comptes
+      summary: Creation d'un nouveau compte rattaché à un ou plusieurs clients
+      description: Creation d'un nouveau compte rattaché à un ou plusieurs clients
+      operationId: creerCompte
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreationCompteRequest'
+        required: true
+      responses:
+        '201':
+          description: Le compte a bien été crée dans le système
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreationCompteResponse'          
+        '400':
+          description: Les donnnées en entrée du service sont non renseignes ou incorrectes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+        '500':
+          description: Une erreur de traitement a été rencontrée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+  /comptes/{iban}/cartes:
+    get:
+      tags:
+        - comptes
+      summary: Recuperation des cartes de paiement rattachées à un compte
+      description: Recuperation des cartes de paiement rattachées à un compte
+      operationId: getCartesParIban
+      parameters:
+        - name: iban
+          in: path
+          description: Iban du compte
+          required: true
+          schema:
+            type: string
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/GetCarteResponse'
+        '400':
+          description: Les donnnées en entrée du service sont non renseignes ou incorrectes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+        '404':
+          description: Aucune carte n'est rattachée au compte fournit en paramètre
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+        '500':
+          description: Une erreur de traitement a été rencontrée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+    post:
+      tags:
+        - comptes
+      summary: Creation d'un nouveau compte dans le système bancaire
+      description: Creation d'un nouveau compte dans le système bancaire
+      operationId: creerCarte
+      parameters:
+        - name: iban
+          in: path
+          description: Iban du compte
+          required: true
+          schema:
+            type: string
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreationCarteRequest'
+        required: true
+      responses:
+        '201':
+          description: Carte correctement créee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreationCarteResponse'          
+        '400':
+          description: Les donnnées en entrée du service sont non renseignes ou incorrectes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+        '500':
+          description: Une erreur de traitement a été rencontrée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+  /comptes/{iban}/cartes/{numeroCarte}/paiement:
+    post:
+      tags:
+        - comptes
+      summary: Permert d'effectuer un paiement depuis une carte
+      description: Permert d'effectuer un paiement depuis une carte
+      operationId: createPaiementCarte
+      parameters:
+        - name: iban
+          in: path
+          description: Iban du compte
+          required: true
+          schema:
+            type: string
+        - name: numeroCarte
+          in: path
+          description: numeroCarte de la carte
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaiementRequest'
+      responses:
+        '201':
+          description: Le paiement a été enregistré dans le systeme
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePaiementReponse'          
+        '400':
+          description: Les donnnées en entrée du service sont non renseignes ou incorrectes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+        '404':
+          description: Aucune carte ou compte fournit en paramètre
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+        '500':
+          description: Une erreur de traitement a été rencontrée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+  /virements/:
+    post:
+      tags:
+        - virements
+      summary: Creation d'un nouveau virement dans le système bancaire
+      description: Creation d'un nouveau virement dans le système bancaire
+      operationId: creerVirement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirementRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirementResponse'          
+        '400':
+          description: Les donnnées en entrée du service sont non renseignes ou incorrectes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+        '500':
+          description: Une erreur de traitement a été rencontrée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpErrorResponse'
+components:
+  schemas:
+    CreatePaiementRequest:
+      type: object
+      properties:
+        montant:
+          type: integer
+          format: int64
+          example: 100000
+        dateCreation:
+          type: string
+          example: '2022-11-28T18:46:19'
+    CreatePaiementReponse:
+      type: object
+      properties:
+        idTransaction:
+          type: integer
+          format: int64
+          example: 100000
+        montant:
+          type: integer
+          format: int64
+          example: 100000
+        typeTransaction:
+          $ref: '#/components/schemas/TypeTransaction'
+        dateCreation:
+          type: string
+          example: '2022-11-28T18:46:19'
+    GetClientReponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 100000
+        prenom:
+          type: integer
+          format: int64
+          example: Aurelien
+        nom:
+          type: integer
+          format: int32
+          example: Pietrzak
+        dateNaissance:
+          type: string
+          format: date-time
+          example: '2022-11-28T18:46:19'
+        telephone:
+          type: string
+          example: '0646214525'
+        adressePostale:
+          type: string
+          example: '75 rue de Paris'
+        dateCreation:
+          type: string
+          example: '2022-11-28T18:46:19'
+    CreationClientRequest:
+      required:
+        - prenom
+        - nom
+        - dateNaissance
+        - telephone
+        - adressePostale
+      type: object
+      properties:
+        prenom:
+          type: integer
+          format: int64
+          example: Aurelienx
+        nom:
+          type: integer
+          format: int32
+          example: Pietrzak
+        dateNaissance:
+          type: string
+          format: date-time
+          example: '2022-11-28T18:46:19'
+        telephone:
+          type: string
+          example: '0646214525'
+        adressePostale:
+          type: string
+          example: '75 rue de Paris'
+    CreationClientReponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 100000
+        prenom:
+          type: integer
+          format: int64
+          example: Aurelien
+        nom:
+          type: integer
+          format: int32
+          example: Pietrzak
+        dateNaissance:
+          type: string
+          format: date-time
+          example: '03/04/1997'
+        telephone:
+          type: string
+          example: '0646214525'
+        adressePostale:
+          type: string
+          example: '75 rue de Paris'
+        dateCreation:
+          type: string
+          format: date-time
+          example: '2022-11-28T18:46:19'
+    UpdateClientRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 100000
+        prenom:
+          type: integer
+          format: int64
+          example: Aurelien
+        nom:
+          type: integer
+          format: int32
+          example: Pietrzak
+        dateNaissance:
+          type: string
+          format: date-time
+          example: '2022-11-28T18:46:19'
+        telephone:
+          type: string
+          example: '0646214525'
+        adressePostale:
+          type: string
+          example: '75 rue de Paris'
+    UpdateClientReponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 100000
+        prenom:
+          type: integer
+          format: int64
+          example: Aurelien
+        nom:
+          type: integer
+          format: int32
+          example: Pietrzak
+        dateNaissance:
+          type: string
+          format: date-time
+          example: '2022-11-28T18:46:19'
+        telephone:
+          type: string
+          example: '0646214525'
+        adressePostale:
+          type: string
+          example: '75 rue de Paris'
+        dateModification:
+          type: string
+          format: date-time
+          example: '75 rue de Paris'
+    GetComptesResponse:
+      type: object
+      properties:
+        iban:
+          type: string
+          example: FR7630003020541031340039949
+        solde:
+          type: number
+          example: '367,32'
+        intituleCompte:
+          type: string
+          example: Compte courant Mr Pietrzak
+        typeCompte:
+          $ref: '#/components/schemas/TypeCompte'
+        titulairesCompte:
+          type: array
+          items: 
+            $ref: '#/components/schemas/GetTitulairesCompteResponse'
+        transactions:
+          type: array
+          items: 
+            $ref: '#/components/schemas/GetTransactionsCompteResponse'
+    GetTitulairesCompteResponse:
+      type: object
+      properties:
+        idClient:
+          type: string
+          example: 100000
+    GetTransactionsCompteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 100000
+        montant:
+          type: number
+          example: '367,32'
+        typeTransaction:
+          $ref: '#/components/schemas/TypeTransaction'
+        typeSource:
+          $ref: '#/components/schemas/TypeSource'
+        idSource:
+          type: string
+          description: identifiant unique de la source de la transaction
+          example: '100000'
+    CreationCompteRequest:
+      required:
+        - intituleCompte
+        - typeCompte
+        - titulairesCompte
+      type: object
+      properties:
+        intituleCompte:
+          type: string
+          example: Compte courant Mr Pietrzak
+        typeCompte:
+          $ref: '#/components/schemas/TypeCompte'
+        titulairesCompte:
+          type: array
+          items: 
+            $ref: '#/components/schemas/GetTitulairesCompteResponse'
+    CreationCompteResponse:
+      required:
+        - iban
+        - intituleCompte
+        - typeCompte
+        - titulairesCompte
+        - dateCreation
+      type: object
+      properties:
+        intituleCompte:
+          type: string
+          example: Compte courant Mr Pietrzak
+        typeCompte:
+          $ref: '#/components/schemas/TypeCompte'
+        titulairesCompte:
+          type: array
+          items: 
+            $ref: '#/components/schemas/GetTitulairesCompteResponse'
+        iban:
+          type: string
+          example: FR7630003020541031340039949
+        dateCreation:
+          type: string
+          example: '2022-11-28T18:46:19'
+    CreationCarteRequest:
+        required:
+          - titulaire
+          - code
+        type: object
+        properties:
+          titulaireCarte:
+            type: string
+            example: '100000'
+          code:
+            type: number
+            example: 1234
+    TypeCompte:
+        type: string
+        example: 'COMPTE_COURANT_SIMPLE'
+        enum:
+          - 'COMPTE_COURANT_SIMPLE'
+          - 'COMPTE_COURANT_JOINT'
+    TypeTransaction:
+        type: string
+        example: 'DEBIT'
+        enum:
+          - 'DEBIT'
+          - 'CREDIT'
+    TypeSource:
+        type: string
+        example: 'VIREMENT'
+        enum:
+          - 'VIREMENT'
+          - 'CARTE'
+    CreationCarteResponse:
+        required:
+          - numeroCarte
+          - dateExpiration
+          - titulaireCarte
+        type: object
+        properties:
+          titulaireCarte:
+            type: string
+            example: '10000'
+          numeroCarte:
+            type: string
+            example: '4973444455557777'
+          dateExpiration:
+            type: string
+            example: '10/22'
+    GetCarteResponse:
+        required:
+          - numeroCarte
+          - dateExpiration
+          - titulaireCarte
+        type: object
+        properties:
+          numeroCarte:
+            type: string
+            example: '4973550098981414'
+          dateExpiration:
+            type: number
+            example: '03/2024'
+          titulaireCarte:
+            $ref: '#/components/schemas/GetTitulairesCompteResponse'
+    VirementRequest:
+        required:
+          - ibanCompteEmetteur
+          - ibanCompteBeneficiaire
+          - montant
+          - libelleVirement
+        properties:
+          ibanCompteEmetteur:
+            type: string
+            example: FR7630003020541031340039949
+          ibanCompteBeneficiaire:
+            type: string
+            example: FR7630003020541031340039949
+          montant:
+            type: number
+            example: 1234
+          libelleVirement:
+            type: string
+            example: "Virement vers mon compte courant"
+    VirementResponse:
+        required:
+          - idVirement
+          - dateCreation
+          - transactions
+        type: object
+        properties:
+          idVirement:
+            type: string
+            example: 3241424
+          dateCreation:
+            type: string
+            example: '2022-11-28T18:46:19'
+          transactions:
+            type: array
+            items: 
+              $ref: '#/components/schemas/GetTransactionsCompteResponse'
+    HttpErrorResponse:
+        required:
+          - message
+        type: object
+        properties:
+          message:
+            type: string
+            example: "Le message d'erreur fonctionnelle sera dans ce champ"

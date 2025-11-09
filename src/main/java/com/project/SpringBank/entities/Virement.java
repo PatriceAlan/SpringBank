@@ -16,21 +16,26 @@ public class Virement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_virement", nullable = false, updatable = false)
     private Long idVirement;
 
-    @Column(name = "ibanCompteEmetteur")
+    @Column(name = "iban_compte_emetteur", nullable = false)
     private String ibanCompteEmetteur;
 
-    @Column(name = "ibanCompteBeneficiaire")
-    private String ibanCompteBeneficiaire;
+    @Column(name = "iban_compte_receveur", nullable = false)
+    private String ibanCompteReceveur;
 
-    private String libelleVirement;
-
-    private double montantVirement;
-
+    @Column(name = "date_virement", nullable = false)
     private LocalDateTime dateVirement;
 
-    @OneToOne
+    @Column(name = "libelle_virement")
+    private String libelleVirement;
+
+    @Column(name = "montant_virement", nullable = false)
+    private double montantVirement;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "transaction_id", unique = true)
     private Transaction transaction;
 
 }

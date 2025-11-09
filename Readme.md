@@ -6,6 +6,12 @@ Projet de Gestion Bancaire avec API REST Spring Boot.
 
 Le but de ce projet est de développer une API REST Spring Boot pour la gestion d'un système bancaire de petite envergure.
 
+### Contrat de Service
+
+[Lien vers contrat de service](springbank-projet.yml)
+
+Le fichier est à copier/coller dans : https://editor.swagger.io
+
 ## Portée du Projet
 
 Le système bancaire a la capacité de gérer les clients, leurs comptes et les transactions associées. Les différentes entités sont les suivantes :
@@ -34,17 +40,19 @@ Le système bancaire a la capacité de gérer les clients, leurs comptes et les 
   - Attributs : type de transaction, source, date, montant.
   - Relations :
     - Une transaction concerne un seul compte (émetteur ou bénéficiaire).
-    - Une transaction est liée à un virement ou un paiement spécifique à travers l'attribut idSource qui représente l'id de soit du virement ou soit du 
-    paiement.
+    - Une transaction est liée à un virement ou un paiementCarte spécifique à travers l'attribut idSource qui représente l'id de soit du virement ou soit du 
+    paiementCarte.
 
 5. **Virement :**
   - Attributs : libellé du virement.
   - Relations :
     - Un virement implique deux comptes (compte débiteur et compte créditeur).
 
+
 ### Diagramme de Classe UML
 
 ![Diagramme de Classe](https://github.com/PatriceAlan/SpringBank/blob/main/diagramme_de_classe_spring_bank.png?raw=true)
+
 
 ## Structure du Projet
 

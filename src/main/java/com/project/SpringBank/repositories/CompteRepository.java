@@ -1,8 +1,7 @@
 package com.project.SpringBank.repositories;
 
-import com.project.SpringBank.DTO.compte.ResponseCompteDTO;
+import com.project.SpringBank.entities.Client;
 import com.project.SpringBank.entities.Compte;
-import com.project.SpringBank.entities.TypeCompte;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +12,8 @@ import java.util.Optional;
 public interface CompteRepository extends JpaRepository<Compte, String>{
 
     Optional<Compte> findByIban(String iban);
+
+    boolean existsByNumeroCompte(Long numeroCompte);
+
+    List<Compte> findByTitulairesCompte(Client titulairesCompte);
 }

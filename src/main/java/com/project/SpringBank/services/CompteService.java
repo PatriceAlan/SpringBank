@@ -1,98 +1,78 @@
 package com.project.SpringBank.services;
 
-import com.project.SpringBank.DTO.compte.CreateCompteDTO;
-import com.project.SpringBank.DTO.compte.ResponseCompteDTO;
-import com.project.SpringBank.entities.*;
+import com.project.SpringBank.DTO.carte.GetCarteResponseDTO;
+import com.project.SpringBank.DTO.compte.CreateCompteRequestDTO;
+import com.project.SpringBank.DTO.compte.GetComptesResponseDTO;
+import com.project.SpringBank.entities.Carte;
+import com.project.SpringBank.entities.Client;
+import com.project.SpringBank.entities.Compte;
+import com.project.SpringBank.mappers.CarteMapper;
+import com.project.SpringBank.mappers.CompteMapper;
+import com.project.SpringBank.repositories.CarteRepository;
 import com.project.SpringBank.repositories.ClientRepository;
 import com.project.SpringBank.repositories.CompteRepository;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
+import static com.project.SpringBank.Utils.FonctionsGeneratives.genererIban;
+import static com.project.SpringBank.Utils.FonctionsGeneratives.genererNumeroCompte;
 
 @Service
-@Builder
+@RequiredArgsConstructor
 public class CompteService {
 
     private final CompteRepository compteRepository;
-    private static final String CODE_BANQUE = "30003";
-    private static final String CODE_GUICHET = "02054";
     private final ClientRepository clientRepository;
+    private final CarteRepository carteRepository;
+    private final CompteMapper compteMapper;
+    private final CarteMapper carteMapper;
 
-    public CompteService(CompteRepository compteRepository, ClientRepository clientRepository) {
-        this.compteRepository = compteRepository;
-        this.clientRepository = clientRepository;
-    }
 
-    public Compte createCompte(CreateCompteDTO createCompteDTO) {
+    public Compte createCompte(CreateCompteRequestDTO compteCree) {
+
         // Recherche des clients par leur ID
         Set<Client> titulaires = new HashSet<>();
-        for (Long clientId : createCompteDTO.getTitulaireCompte()) {
+        for (Long clientId : compteCree.getTitulairesCompte()) {
             Optional<Client> existingClient = clientRepository.getClientByIdClient(clientId);
-            existingClient.ifPresent(titulaires::add);
+            if (existingClient.isEmpty()){
+                throw new IllegalArgumentException("Le client avec l'ID " + clientId + " est introuvable.");
+            }
+            titulaires.add(existingClient.get());
         }
 
+        Long numeroCompteCree = genererNumeroCompte();
+        String ibanCree = genererIban(numeroCompteCree);
+
         Compte compte = Compte.builder()
-                .numeroCompte(createCompteDTO.getNumeroCompte())
-                .solde(createCompteDTO.getSolde())
-                .cleRIB(calculerCleRIB(createCompteDTO))
-                .typeCompte(createCompteDTO.getTypeCompte())
-                .titulaireCompte(titulaires) // Utilisez les clients trouvés
-                .intituleCompte(createCompteDTO.getIntituleCompte())
+                .iban(ibanCree)
+                .numeroCompte(numeroCompteCree)
+                .solde(compteCree.getSolde())
+                .typeCompte(compteCree.getTypeCompte())
+                .intituleCompte(compteCree.getIntituleCompte())
                 .dateCreation(LocalDateTime.now())
-                .iban(genererIBAN(createCompteDTO))
+                .titulairesCompte(titulaires)
                 .build();
 
         return compteRepository.save(compte);
     }
 
 
-
-    public ResponseCompteDTO mapCompteToResponseDTO(Compte compte){
-
-        Set<Long> titulaires = new HashSet<>();
-        for (Client client : compte.getTitulaireCompte()) {
-            titulaires.add(client.getIdClient());
-        }
-        return ResponseCompteDTO.builder()
-                .iban(compte.getIban())
-                .numeroCompte(compte.getNumeroCompte())
-                .typeCompte(compte.getTypeCompte().name())
-                .titulaireCompte(titulaires)
-                .intituleCompte(compte.getIntituleCompte())
-                .dateCreation(compte.getDateCreation())
-                .build();
-    }
-
-    public List<ResponseCompteDTO> listComptes(){
-        List<Compte> comptes = compteRepository.findAll();
+    public List<GetComptesResponseDTO> listComptesClient(Client titulairesCompte){
+        List<Compte> comptes = compteRepository.findByTitulairesCompte(titulairesCompte);
         return comptes.stream()
-                .map(this::mapCompteToResponseDTO)
+                .map(compteMapper::toGetComptesResponseDTO)
                 .toList();
     }
 
-    private String genererIBAN(CreateCompteDTO compte) {
-        return "FR76" + CODE_BANQUE + CODE_GUICHET + compte.getNumeroCompte() + compte.getCleRIB();
-    }
+    public List<GetCarteResponseDTO> listCartesCompte(String iban){
+        List<Carte> cartes = carteRepository.findByCompteAssocie_Iban(iban);
 
-
-    private int calculerCleRIB(CreateCompteDTO compte) {
-        String numeroCompteAsString = String.valueOf(compte.getNumeroCompte());
-        return 97 - (89 * Integer.parseInt(CODE_BANQUE) + 15 * Integer.parseInt(CODE_GUICHET)
-                + 3 * Integer.parseInt(numeroCompteAsString)) % 97;
-    }
-
-    public Set<Client> getTitulaireCompte(String iban) {
-        Optional<Compte> compte = compteRepository.findById(iban);
-        if (compte.isEmpty()) {
-            throw new EntityNotFoundException("Le compte n'existe pas");
-        }
-        return compte.get().getTitulaireCompte();
+        return cartes.stream()
+                .map(carteMapper::toGetCarteResponseDTO)
+                .toList();
     }
 
 

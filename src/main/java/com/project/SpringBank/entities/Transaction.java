@@ -14,23 +14,35 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id_transaction", nullable = false, updatable = false)
     private Long idTransaction;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type_transaction", nullable = false)
     private TypeTransaction typeTransaction;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type_source", nullable = false)
     private TypeSource typeSource;
 
+    @Column(name = "libelle_transaction")
+    private String libelleTransaction;
 
+    @Column(name = "date_transaction", nullable = false)
     private LocalDateTime dateTransaction;
 
+    @Column(name = "montant_transaction", nullable = false)
     private double montantTransaction;
 
     @ManyToOne
-    @JoinColumn(name = "iban")
-    private Compte compteTransactions;
+    @JoinColumn(name = "compte_id", nullable = false)
+    private Compte compte;
 
+    @OneToOne(mappedBy = "transaction", cascade = CascadeType.ALL)
+    private Virement virement;
+
+    @OneToOne(mappedBy = "transaction", cascade = CascadeType.ALL)
+    private PaiementCarte paiementCarte;
 
 }
 
