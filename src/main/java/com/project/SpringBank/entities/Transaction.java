@@ -14,26 +14,29 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long idTransaction;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type_transaction", nullable = false)
     private TypeTransaction typeTransaction;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "type_source", nullable = false)
     private TypeSource typeSource;
 
-    private String libelle;
+    @Column(name = "libelle_transaction")
+    private String libelleTransaction;
 
+    @Column(name = "date_transaction", nullable = false)
     private LocalDateTime dateTransaction;
 
+    @Column(name = "montant_transaction", nullable = false)
     private double montantTransaction;
-
-    private String ibanContrepartie;
 
     @ManyToOne
     @JoinColumn(name = "compte_id", nullable = false)
     private Compte compte;
-
 
 }
 

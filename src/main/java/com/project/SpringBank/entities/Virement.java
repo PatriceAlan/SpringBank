@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -17,21 +16,26 @@ public class Virement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long idVirement;
 
-    @Column(name = "ibanCompteEmetteur")
-    private String ibanCompteEmetteur;
+    @Column(name = "iban_compte_debiteur", nullable = false)
+    private String ibanCompteDebiteur;
 
-    @Column(name = "ibanCompteBeneficiaire")
-    private String ibanCompteBeneficiaire;
+    @Column(name = "iban_compte_crediteur", nullable = false)
+    private String ibanCompteCrediteur;
 
-    private String libelleVirement;
-
-    private double montantVirement;
-
+    @Column(name = "date_virement", nullable = false)
     private LocalDateTime dateVirement;
 
-    @OneToMany
-    private List<Transaction> transactions;
+    @Column(name = "libelle_virement")
+    private String libelleVirement;
+
+    @Column(name = "montant_virement", nullable = false)
+    private double montantVirement;
+
+    @OneToOne
+    @JoinColumn(name = "transaction_id", unique = true)
+    private Transaction transaction;
 
 }

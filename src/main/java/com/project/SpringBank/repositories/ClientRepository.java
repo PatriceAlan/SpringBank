@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
-    Optional<Client> getClientByIdClient(Long idClient);
+    Optional<Client> getClientById(Long id);
 }

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CarteRepository extends JpaRepository<Carte, Long> {
-    
+    List<Carte> findByCompteAssocie(Long compteId);
 }

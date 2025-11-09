@@ -34,8 +34,8 @@ Le système bancaire a la capacité de gérer les clients, leurs comptes et les 
   - Attributs : type de transaction, source, date, montant.
   - Relations :
     - Une transaction concerne un seul compte (émetteur ou bénéficiaire).
-    - Une transaction est liée à un virement ou un paiement spécifique à travers l'attribut idSource qui représente l'id de soit du virement ou soit du 
-    paiement.
+    - Une transaction est liée à un virement ou un paiementCarte spécifique à travers l'attribut idSource qui représente l'id de soit du virement ou soit du 
+    paiementCarte.
 
 5. **Virement :**
   - Attributs : libellé du virement.

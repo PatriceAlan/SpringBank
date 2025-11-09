@@ -1,17 +1,20 @@
 package com.project.SpringBank.controllers;
 
-import com.project.SpringBank.DTO.carte.CreateCarteDTO;
-import com.project.SpringBank.DTO.carte.ResponseCarteDTO;
-import com.project.SpringBank.DTO.compte.CreateCompteDTO;
-import com.project.SpringBank.DTO.compte.ResponseCompteDTO;
-import com.project.SpringBank.DTO.paiement.ResponsePaiementDTO;
-import com.project.SpringBank.entities.*;
+import com.project.SpringBank.DTO.carte.CreateCarteRequestDTO;
+import com.project.SpringBank.DTO.carte.CreateCarteResponseDTO;
+import com.project.SpringBank.DTO.compte.CreateCompteRequestDTO;
+import com.project.SpringBank.DTO.compte.CreateCompteResponseDTO;
+import com.project.SpringBank.DTO.compte.GetComptesResponseDTO;
+import com.project.SpringBank.entities.Carte;
+import com.project.SpringBank.entities.Client;
+import com.project.SpringBank.entities.Compte;
+import com.project.SpringBank.entities.Transaction;
 import com.project.SpringBank.repositories.CarteRepository;
 import com.project.SpringBank.repositories.CompteRepository;
 import com.project.SpringBank.services.CarteService;
 import com.project.SpringBank.services.CompteService;
 import com.project.SpringBank.services.PaiementService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/comptes")
+@RequestMapping("/api/v1/comptes")
+@RequiredArgsConstructor
 public class CompteController {
 
     private final CompteService compteService;
@@ -28,134 +32,81 @@ public class CompteController {
     private final CarteRepository carteRepository;
     private final PaiementService paiementService;
 
-    @Autowired
-    public CompteController(CompteService compteService, CompteRepository compteRepository, CarteService carteService,
-                            CarteRepository carteRepository, PaiementService paiementService) {
-        this.compteService = compteService;
-        this.compteRepository = compteRepository;
-        this.carteService = carteService;
-        this.carteRepository = carteRepository;
-        this.paiementService = paiementService;
-    }
-
-    @PostMapping
-    public ResponseEntity<ResponseCompteDTO> createCompte(@RequestBody CreateCompteDTO compteDTO) {
-        Compte createdCompte = compteService.createCompte(compteDTO);
-        ResponseCompteDTO responseCompteDTO = mapCompteToResponseDTO(createdCompte);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseCompteDTO);
-    }
-
-
     @GetMapping
-    public ResponseEntity<List<ResponseCompteDTO>> listComptes() {
-        List<ResponseCompteDTO> comptes = compteService.listComptes();
-        return ResponseEntity.ok(comptes);
+    public ResponseEntity<List<GetComptesResponseDTO>> listComptes() {
+        return ResponseEntity.ok(compteService.listComptes());
     }
 
-    public ResponseCompteDTO mapCompteToResponseDTO(Compte compte){
+    @GetMapping("/{iban}")
+    public ResponseEntity<CreateCompteResponseDTO> getCompteByIban(@PathVariable String iban){
+        Optional<Compte> optionalCompte = compteRepository.findByIban(iban);
+        if (optionalCompte.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Compte compte = optionalCompte.get();
+        CreateCompteResponseDTO compteDTO = compteService.mapCompteToResponseDTO(compte);
+        return ResponseEntity.ok(compteDTO);
+    }
 
+    public CreateCompteResponseDTO mapCompteToResponseDTO(Compte compte){
         Set<Long> titulaires = new HashSet<>();
         for (Client client : compte.getTitulaires()) {
             titulaires.add(client.getIdClient());
         }
-        return ResponseCompteDTO.builder()
+        return CreateCompteResponseDTO.builder()
                 .iban(compte.getIban())
-                .numeroCompte(compte.getNumeroCompte())
-                .typeCompte(compte.getTypeCompte().name())
+                .typeCompte(compte.getTypeCompte())
                 .titulaireCompte(titulaires)
                 .intituleCompte(compte.getIntituleCompte())
                 .dateCreation(compte.getDateCreation())
                 .build();
     }
 
-    @GetMapping("/{iban}")
-    public ResponseEntity<ResponseCompteDTO> getCompteByIban(@PathVariable String iban) {
-        Optional<Compte> compteOptional = compteRepository.findByIban(iban);
-        Compte compte = compteOptional.orElse(null);
-        assert compte != null;
-        ResponseCompteDTO responseCompteDTO = compteService.mapCompteToResponseDTO(compte);
-        return ResponseEntity.ok(responseCompteDTO);
+    @PostMapping
+    public ResponseEntity<CreateCompteResponseDTO> createCompte(@RequestBody CreateCompteRequestDTO compteDTO) {
+        Compte compteCree = compteService.createCompte(compteDTO);
+        CreateCompteResponseDTO createCompteResponseDTO = mapCompteToResponseDTO(compteCree);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createCompteResponseDTO);
     }
+
 
     @GetMapping("/{iban}/titulaires")
-    public Set<Client> getTitulairesByIban(@PathVariable String iban) {
-        Compte compte = compteRepository.findById(iban).orElseThrow();
-        return compte.getTitulaires();
+    public ResponseEntity<Set<Client>> getTitulairesCompte(@PathVariable String iban){
+        Optional<Compte> optionalCompte = compteRepository.findByIban(iban);
+        if (optionalCompte.isEmpty()){
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Compte compte = optionalCompte.get();
+        Set<Client> clients = compte.getTitulaires();
+        return ResponseEntity.ok(clients);
     }
 
-    @GetMapping("/{iban}/cartes")
-    public List<ResponseCarteDTO> getCartesByIban(@PathVariable String iban) {
-        Compte compte = compteRepository.findById(iban).orElseThrow();
-        List<Carte> cartes = compte.getCartes();
-        List<ResponseCarteDTO> cartesDTO = new ArrayList<>();
-        for (Carte carte : cartes) {
-            ResponseCarteDTO carteDTO = new ResponseCarteDTO();
-            carteDTO.setTitulaireCarte(carte.getTitulaireCarte().getIdClient());
-            carteDTO.setNumeroCarte(carte.getNumeroCarte());
-            carteDTO.setDateExpiration(carte.getDateExpiration());
-
-            cartesDTO.add(carteDTO);
+    @GetMapping("/{iban}/transactions")
+    public ResponseEntity<List<Transaction>> getTransactionsCompte(@PathVariable String iban){
+        Optional<Compte> optionalCompte = compteRepository.findByIban(iban);
+        if (optionalCompte.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        Compte compte = optionalCompte.get();
+        List<Transaction> transactions = compte.getTransactions();
+        return ResponseEntity.ok(transactions);
 
-        return cartesDTO;
     }
 
-    @PostMapping("/{iban}/cartes")
-    public ResponseEntity<ResponseCarteDTO> createCarteForCompte(@PathVariable String iban, @RequestBody CreateCarteDTO carteDTO) {
+    @PostMapping("{iban}/cartes")
+    public ResponseEntity<CreateCarteResponseDTO> createCarteForCompte(
+            @PathVariable String iban,
+            @RequestBody CreateCarteRequestDTO carteDTO) {
 
-        // Vérifiez si le compte avec l'IBAN donné existe
-        Compte compte = compteRepository.findByIban(iban).orElse(null);
-        if (compte == null) {
-
-            System.out.println("Le compte avec l'IBAN donné n'existe pas");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        Optional<Compte> optionalCompte = compteRepository.findByIban(iban);
+        if (optionalCompte.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        // Créer une carte pour le compte
-        Carte carte = carteService.createCarte(carteDTO, iban);
-
-
-        // Mapper la carte créée à votre DTO de réponse pour la carte
-        ResponseCarteDTO responseCarteDTO = carteService.mapCarteToResponseDTO(carte);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseCarteDTO);
-    }
-
-    @PostMapping("/{iban}/cartes/{numeroCarte}/paiement")
-    public ResponseEntity<ResponsePaiementDTO> createPaiementForCarte(@PathVariable String iban, @PathVariable Long numeroCarte, @RequestBody ResponsePaiementDTO paiementDTO) {
-
-        // Vérifiez si le compte avec l'IBAN donné existe
-        Compte compte = compteRepository.findById(iban).orElse(null);
-        if (compte == null) {
-
-            System.out.println("Le compte avec l'IBAN donné n'existe pas");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-        // Vérifiez si la carte avec le numéro de carte donné existe
-        Carte carte = carteRepository.findById(numeroCarte).orElse(null);
-        if (carte == null) {
-
-            System.out.println("La carte avec le numéro donné n'existe pas");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-        double montantPaiement = paiementDTO.getMontantPaiement();
-        double solde = compte.getSolde();
-
-        if (montantPaiement > solde) {
-
-            System.out.println("Le montant du paiement est supérieur au solde du compte");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-
-        Paiement paiement = paiementService.createPaiement(paiementDTO);
-
-        paiement.setCarte(carte);
-
-        ResponsePaiementDTO responsePaiementDTO = paiementService.mapPaiementToResponseDTO(paiement);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(responsePaiementDTO);
+        Carte carte = carteService.createCarte(carteDTO);
+        CreateCarteResponseDTO createCarteResponseDTO = carteService.mapCarteToGetResponseDTO(carte);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createCarteResponseDTO);
     }
 
 

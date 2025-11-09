@@ -1,46 +1,70 @@
 package com.project.SpringBank.services;
 
-import com.project.SpringBank.DTO.paiement.ResponsePaiementDTO;
-import com.project.SpringBank.entities.Paiement;
-import com.project.SpringBank.entities.Transaction;
-import com.project.SpringBank.entities.TypeTransaction;
-import com.project.SpringBank.entities.TypeSource;
+import com.project.SpringBank.DTO.paiement.CreatePaiementRequestDTO;
+import com.project.SpringBank.entities.*;
+import com.project.SpringBank.repositories.CarteRepository;
+import com.project.SpringBank.repositories.CompteRepository;
 import com.project.SpringBank.repositories.PaiementRepository;
 import jakarta.transaction.Transactional;
-import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
-@Builder
+@RequiredArgsConstructor
 public class PaiementService {
 
     private final PaiementRepository paiementRepository;
+    private final CarteRepository carteRepository;
+    private final CompteRepository compteRepository;
 
     @Transactional
-    public Paiement createPaiement(ResponsePaiementDTO paiementDTO){
+    public CreatePaiementRequestDTO createPaiement(CreatePaiementRequestDTO dto, Long carteId) {
+        Carte carte = carteRepository.findById(carteId)
+                .orElseThrow(() -> new IllegalArgumentException("Carte introuvable"));
 
-        Transaction transaction = new Transaction();
-        transaction.setTypeTransaction(TypeTransaction.DEBIT);
-        transaction.setTypeSource(TypeSource.CARTE);
-        transaction.setDateTransaction(LocalDateTime.now());
-        transaction.setMontantTransaction(paiementDTO.getMontantPaiement());
+        Compte compte = carte.getCompteAssocie();
+        if (compte.getSolde() < dto.getMontantPaiement()) {
+            throw new IllegalArgumentException("Solde insuffisant");
+        }
 
-        Paiement paiement = Paiement.builder()
-                .idTransaction(transaction.getIdTransaction())
-                .montantPaiement(paiementDTO.getMontantPaiement())
-                .datePaiement(paiementDTO.getDatePaiement())
+        // Mise à jour du solde
+        compte.setSolde(compte.getSolde() - dto.getMontantPaiement());
+        compteRepository.save(compte);
+
+        // Transaction associée
+        Transaction transaction = Transaction.builder()
+                .typeTransaction(TypeTransaction.DEBIT)
+                .typeSource(TypeSource.CARTE)
+                .dateTransaction(LocalDateTime.now())
+                .montantTransaction(dto.getMontantPaiement())
+                .libelleTransaction("Paiement carte " + carte.getNumeroCarte())
+                .compte(compte)
                 .build();
 
-        return paiementRepository.save(paiement);
+        // Paiement
+        PaiementCarte paiementCarte = PaiementCarte.builder()
+                .carte(carte)
+                .transaction(transaction)
+                .build();
+
+        paiementRepository.save(paiementCarte);
+
+        return CreatePaiementRequestDTO.builder()
+                .montantPaiement(dto.getMontantPaiement())
+                .datePaiement(LocalDateTime.now())
+                .build();
     }
 
-
-    public ResponsePaiementDTO mapPaiementToResponseDTO(Paiement paiement) {
-        return ResponsePaiementDTO.builder()
-                .montantPaiement(paiement.getMontantPaiement())
-                .datePaiement(paiement.getDatePaiement())
-                .build();
+    public List<CreatePaiementRequestDTO> getPaymentsByCard(String numeroCarte) {
+        List<PaiementCarte> paiementCartes = paiementRepository.findByNumeroCarte(numeroCarte);
+        return paiementCartes.stream()
+                .map(p -> CreatePaiementRequestDTO.builder()
+                        .montantPaiement(p.getTransaction().getMontantTransaction())
+                        .datePaiement(p.getTransaction().getDateTransaction())
+                        .build())
+                .toList();
     }
 }

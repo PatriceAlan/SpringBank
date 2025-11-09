@@ -1,36 +1,49 @@
 package com.project.SpringBank.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
+@Table(name = "cartes")
 public class Carte {
 
     @Id
+    @Column(name = "id", nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "numero_carte", unique = true)
     private Long numeroCarte;
-    
+
+    @Column(name = "date_expiration")
+    private LocalDateTime dateExpiration;
+
+    @Column(name = "active")
+    private boolean active;
+
+    @Column(name = "code_securite")
     private int codeSecurite;
 
-    private LocalDate dateExpiration;
-
     @ManyToOne
+    @JoinColumn(name = "titulaire_id", nullable = false)
     private Client titulaireCarte;
 
     @ManyToOne
+    @JoinColumn(name = "compte_id", nullable = false)
     private Compte compteAssocie;
 
-    @OneToMany(mappedBy = "carte")
-    private List<Paiement> paiements;
+    @OneToMany(mappedBy = "carte", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<PaiementCarte> paiementCartes;
+
 
 }
