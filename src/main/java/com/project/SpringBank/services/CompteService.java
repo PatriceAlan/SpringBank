@@ -38,7 +38,7 @@ public class CompteService {
         for (Long clientId : compteCree.getTitulairesCompte()) {
             Optional<Client> existingClient = clientRepository.getClientByIdClient(clientId);
             if (existingClient.isEmpty()){
-                throw new IllegalArgumentException("Le client avec l'ID " + clientId + "est introuvable.");
+                throw new IllegalArgumentException("Le client avec l'ID " + clientId + " est introuvable.");
             }
             titulaires.add(existingClient.get());
         }
@@ -47,12 +47,13 @@ public class CompteService {
         String ibanCree = genererIban(numeroCompteCree);
 
         Compte compte = Compte.builder()
-                .typeCompte(compteCree.getTypeCompte())
+                .iban(ibanCree)
                 .numeroCompte(numeroCompteCree)
-                .titulairesCompte(titulaires)
+                .solde(compteCree.getSolde())
+                .typeCompte(compteCree.getTypeCompte())
                 .intituleCompte(compteCree.getIntituleCompte())
                 .dateCreation(LocalDateTime.now())
-                .iban(ibanCree)
+                .titulairesCompte(titulaires)
                 .build();
 
         return compteRepository.save(compte);

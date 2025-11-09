@@ -23,10 +23,11 @@ public class CompteMapper {
         }
         return CreateCompteResponseDTO.builder()
                 .iban(compte.getIban())
+                .solde(compte.getSolde())
                 .typeCompte(compte.getTypeCompte())
-                .titulairesCompte(titulaires)
                 .intituleCompte(compte.getIntituleCompte())
                 .dateCreation(compte.getDateCreation())
+                .titulairesCompte(titulaires)
                 .build();
     }
 

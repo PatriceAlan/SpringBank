@@ -14,5 +14,6 @@ public class CreateCompteRequestDTO {
 
     private String intituleCompte;
     private TypeCompte typeCompte;
+    private double solde;
     private Set<Long> titulairesCompte;
 }

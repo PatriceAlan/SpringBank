@@ -24,6 +24,7 @@ public class VirementMapper {
 
         return CreateVirementResponseDTO.builder()
                 .idVirement(virement.getIdVirement())
+                .montantVirement(virement.getMontantVirement())
                 .dateVirement(virement.getDateVirement())
                 .transaction(transactionDTO)
                 .build();

@@ -26,7 +26,7 @@ public class PaiementCarte {
     @Column(name = "montant_paiement", nullable = false)
     private double montantPaiementCarte;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "transaction_id", unique = true)
     private Transaction transaction;
 

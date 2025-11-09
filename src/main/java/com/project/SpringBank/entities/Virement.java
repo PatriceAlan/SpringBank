@@ -34,7 +34,7 @@ public class Virement {
     @Column(name = "montant_virement", nullable = false)
     private double montantVirement;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "transaction_id", unique = true)
     private Transaction transaction;
 
