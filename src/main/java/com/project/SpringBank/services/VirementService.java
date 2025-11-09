@@ -2,10 +2,8 @@ package com.project.SpringBank.services;
 
 import com.project.SpringBank.DTO.virement.CreateVirementRequestDTO;
 import com.project.SpringBank.DTO.virement.CreateVirementResponseDTO;
-import com.project.SpringBank.entities.Transaction;
-import com.project.SpringBank.entities.TypeSource;
-import com.project.SpringBank.entities.TypeTransaction;
-import com.project.SpringBank.entities.Virement;
+import com.project.SpringBank.entities.*;
+import com.project.SpringBank.mappers.VirementMapper;
 import com.project.SpringBank.repositories.CompteRepository;
 import com.project.SpringBank.repositories.VirementRepository;
 import jakarta.transaction.Transactional;
@@ -20,71 +18,74 @@ import java.util.List;
 public class VirementService {
 
     private final VirementRepository virementRepository;
-
     private final CompteRepository compteRepository;
+    private final VirementMapper virementMapper;
 
     @Transactional
-    public CreateVirementResponseDTO createVirement(CreateVirementRequestDTO dto) {
+    public CreateVirementResponseDTO createVirement(CreateVirementRequestDTO virementDTO) {
 
-        var compteEmet = compteRepository.findByIban(dto.getIbanCompteEmetteur())
+        Compte compteEmet = compteRepository.findByIban(virementDTO.getIbanCompteEmetteur())
                 .orElseThrow(()-> new IllegalArgumentException("Compte emetteur introuvable"));
-        var compteBenef = compteRepository.findByIban(dto.getIbanCompteBeneficiaire())
+        Compte compteBenef = compteRepository.findByIban(virementDTO.getIbanCompteReceveur())
                 .orElseThrow(()-> new IllegalArgumentException("Compte beneficiaire introuvable"));
 
-        if(compteEmet.getSolde() < dto.getMontantVirement()) {
+        if(compteEmet.getSolde() < virementDTO.getMontantVirement()) {
             throw new IllegalArgumentException("Solde insuffisant");
         }
 
         // Mise à jour des soldes
-        compteEmet.setSolde(compteEmet.getSolde() - dto.getMontantVirement());
-        compteBenef.setSolde(compteBenef.getSolde() + dto.getMontantVirement());
+        compteEmet.setSolde(compteEmet.getSolde() - virementDTO.getMontantVirement());
+        compteBenef.setSolde(compteBenef.getSolde() + virementDTO.getMontantVirement());
 
         Transaction debit = Transaction.builder()
                 .dateTransaction(LocalDateTime.now())
                 .typeTransaction(TypeTransaction.DEBIT)
                 .typeSource(TypeSource.VIREMENT)
-                .montantTransaction(dto.getMontantVirement())
-                .libelleTransaction("Virement vers "+ dto.getIbanCompteBeneficiaire())
-                .ibanCompteConcerne(dto.getIbanCompteBeneficiaire())
+                .montantTransaction(virementDTO.getMontantVirement())
+                .libelleTransaction("Virement vers "+ virementDTO.getIbanCompteReceveur())
                 .compte(compteEmet)
                 .build();
 
-        Transaction  credit = Transaction.builder()
+        Transaction credit = Transaction.builder()
                 .dateTransaction(LocalDateTime.now())
                 .typeTransaction(TypeTransaction.CREDIT)
                 .typeSource(TypeSource.VIREMENT)
-                .montantTransaction(dto.getMontantVirement())
-                .libelleTransaction("Virement reçu de "+ dto.getIbanCompteEmetteur())
-                .ibanCompteConcerne(dto.getIbanCompteEmetteur())
+                .montantTransaction(virementDTO.getMontantVirement())
+                .libelleTransaction("Virement reçu de "+ virementDTO.getIbanCompteEmetteur())
                 .compte(compteBenef)
                 .build();
 
-        Virement virement = Virement.builder()
-                .libelleVirement(dto.getLibelleVirement())
+        Virement sendVirement = Virement.builder()
+                .ibanCompteEmetteur(virementDTO.getIbanCompteEmetteur())
+                .ibanCompteReceveur(virementDTO.getIbanCompteReceveur())
+                .libelleVirement(virementDTO.getLibelleVirement())
                 .dateVirement(LocalDateTime.now())
-                .montant(dto.getMontantVirement())
-                .transactions(List.of(debit, credit))
+                .montantVirement(virementDTO.getMontantVirement())
+                .transaction(debit)
                 .build();
 
-        compteRepository.save(compteEmet);
-        compteRepository.save(compteBenef);
-        virementRepository.save(virement);
-
-        return mapVirementToResponseDTO(virement);
-    }
-
-    public CreateVirementResponseDTO mapVirementToResponseDTO(Virement virement) {
-        return CreateVirementResponseDTO.builder()
-                .idVirement(virement.getIdVirement())
-                .dateVirement(virement.getDateVirement())
-                .montant(virement.getMontant())
-                .transactions(virement.getTransactions())
+        Virement receiveVirement = Virement.builder()
+                .ibanCompteEmetteur(virementDTO.getIbanCompteEmetteur())
+                .ibanCompteReceveur(virementDTO.getIbanCompteReceveur())
+                .libelleVirement(virementDTO.getLibelleVirement())
+                .dateVirement(LocalDateTime.now())
+                .montantVirement(virementDTO.getMontantVirement())
+                .transaction(credit)
                 .build();
+
+        debit.setVirement(sendVirement);
+        credit.setVirement(receiveVirement);
+
+        virementRepository.save(sendVirement);
+        virementRepository.save(receiveVirement);
+
+        return virementMapper.toVirementResponseDto(sendVirement);
     }
+
 
     public List<CreateVirementResponseDTO> listerVirements() {
         return this.virementRepository.findAll().stream()
-                .map(this::mapVirementToResponseDTO)
+                .map(virementMapper::toVirementResponseDto)
                 .toList();
     }
 

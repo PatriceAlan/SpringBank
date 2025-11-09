@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
 
@@ -13,14 +14,11 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Compte {
 
     @Id
-    @Column(name = "id", nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "iban", unique = true, nullable = false)
     private String iban;
 
@@ -50,7 +48,7 @@ public class Compte {
     @JoinTable(name = "titulairesCompte",
     joinColumns = @JoinColumn(name = "compte_id"),
     inverseJoinColumns = @JoinColumn(name = "client_id"))
-    private Set<Client> titulaires;
+    private Set<Client> titulairesCompte = new HashSet<>();
 
     @OneToMany(mappedBy = "compte")
     private List<Transaction> transactions;

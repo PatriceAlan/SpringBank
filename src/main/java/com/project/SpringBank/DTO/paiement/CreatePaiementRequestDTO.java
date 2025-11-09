@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CreatePaiementRequestDTO {
 
     private double montantPaiement;

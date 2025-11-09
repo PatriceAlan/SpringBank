@@ -7,7 +7,9 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -20,7 +22,7 @@ public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id_client", nullable = false, updatable = false)
     private Long idClient;
 
     @Column(name = "prenom", length = 100)
@@ -50,12 +52,12 @@ public class Client {
     @Column(name = "date_creation", nullable = false)
     private LocalDateTime dateCreation;
 
-    @Column(name = "date_modification", nullable = false)
+    @Column(name = "date_modification")
     private LocalDateTime dateModification;
 
     @OneToMany(mappedBy = "titulaireCarte")
     private List<Carte> cartes = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "titulaireCompte")
-    private List<Compte> comptes = new ArrayList<>();
+    @ManyToMany(mappedBy = "titulairesCompte")
+    private Set<Compte> comptes = new HashSet<>();
 }

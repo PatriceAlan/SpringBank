@@ -40,4 +40,5 @@ public class FonctionsGeneratives {
         return 100 + random.nextInt(900);
     }
 
+
 }

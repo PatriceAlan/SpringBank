@@ -1,7 +1,9 @@
 package com.project.SpringBank.services;
 
 import com.project.SpringBank.DTO.paiement.CreatePaiementRequestDTO;
+import com.project.SpringBank.DTO.paiement.CreatePaiementResponseDTO;
 import com.project.SpringBank.entities.*;
+import com.project.SpringBank.mappers.PaiementMapper;
 import com.project.SpringBank.repositories.CarteRepository;
 import com.project.SpringBank.repositories.CompteRepository;
 import com.project.SpringBank.repositories.PaiementRepository;
@@ -19,10 +21,11 @@ public class PaiementService {
     private final PaiementRepository paiementRepository;
     private final CarteRepository carteRepository;
     private final CompteRepository compteRepository;
+    private final PaiementMapper paiementMapper;
 
     @Transactional
-    public CreatePaiementRequestDTO createPaiement(CreatePaiementRequestDTO dto, Long carteId) {
-        Carte carte = carteRepository.findById(carteId)
+    public CreatePaiementResponseDTO createPaiement(CreatePaiementRequestDTO dto, Long numeroCarte) {
+        Carte carte = carteRepository.findByNumeroCarte(numeroCarte)
                 .orElseThrow(() -> new IllegalArgumentException("Carte introuvable"));
 
         Compte compte = carte.getCompteAssocie();
@@ -52,19 +55,7 @@ public class PaiementService {
 
         paiementRepository.save(paiementCarte);
 
-        return CreatePaiementRequestDTO.builder()
-                .montantPaiement(dto.getMontantPaiement())
-                .datePaiement(LocalDateTime.now())
-                .build();
+        return paiementMapper.toCreatePaiementResponseDTO(paiementCarte);
     }
 
-    public List<CreatePaiementRequestDTO> getPaymentsByCard(String numeroCarte) {
-        List<PaiementCarte> paiementCartes = paiementRepository.findByNumeroCarte(numeroCarte);
-        return paiementCartes.stream()
-                .map(p -> CreatePaiementRequestDTO.builder()
-                        .montantPaiement(p.getTransaction().getMontantTransaction())
-                        .datePaiement(p.getTransaction().getDateTransaction())
-                        .build())
-                .toList();
-    }
 }

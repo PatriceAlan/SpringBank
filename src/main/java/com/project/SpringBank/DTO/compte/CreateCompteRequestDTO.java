@@ -3,7 +3,6 @@ package com.project.SpringBank.DTO.compte;
 import com.project.SpringBank.entities.TypeCompte;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Builder
@@ -15,5 +14,5 @@ public class CreateCompteRequestDTO {
 
     private String intituleCompte;
     private TypeCompte typeCompte;
-    private Set<Long> titulaireCompte;
+    private Set<Long> titulairesCompte;
 }

@@ -14,7 +14,7 @@ public class PaiementCarte {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id_paiement", nullable = false, updatable = false)
     private Long idPaiement;
 
     @Column(name = "date_paiement", nullable = false)

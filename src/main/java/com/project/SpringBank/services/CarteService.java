@@ -26,11 +26,11 @@ public class CarteService {
     private final ClientRepository clientRepository;
     private final CompteRepository compteRepository;
 
-    public Carte createCarte(CreateCarteRequestDTO dto) {
-        Compte compte = compteRepository.findById(dto.)
+    public Carte createCarte(String iban, CreateCarteRequestDTO createCarteRequestDTO) {
+        Compte compte = compteRepository.findByIban(iban)
                 .orElseThrow(() -> new IllegalArgumentException("Compte introuvable"));
 
-        Client client = clientRepository.findById(dto.getTitulaireId())
+        Client client = clientRepository.findById(createCarteRequestDTO.getTitulaireCarte())
                 .orElseThrow(() -> new IllegalArgumentException("Client introuvable"));
 
         Carte carte = Carte.builder()
@@ -42,26 +42,6 @@ public class CarteService {
                 .build();
 
         return carteRepository.save(carte);
-    }
-
-    public List<GetCarteResponseDTO> getCartesByCompte(Long compteId) {
-        List<Carte> cartes = carteRepository.findByCompteAssocie(compteId);
-        return cartes.stream().map(this::mapCarteToGetResponseDTO).toList();
-    }
-
-    public GetCarteResponseDTO mapCarteToGetResponseDTO(Carte carte) {
-        return GetCarteResponseDTO.builder()
-                .numeroCarte(carte.getNumeroCarte())
-                .dateExpiration(carte.getDateExpiration())
-                .titulaireCarte(carte.getTitulaireCarte().getIdClient())
-                .build();
-    }
-
-    public CreateCarteRequestDTO mapCreateCarteToResponseDTO(Carte carte) {
-        return CreateCarteRequestDTO.builder()
-                .titulaireCarte(carte.getTitulaireCarte().getIdClient())
-                .codeSecurite(genererCodeSecurite())
-                .build();
     }
 
     public long genererNumeroCompteUnique(CompteRepository compteRepository) {

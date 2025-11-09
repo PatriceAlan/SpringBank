@@ -17,10 +17,6 @@ import java.util.List;
 public class Carte {
 
     @Id
-    @Column(name = "id", nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(name = "numero_carte", unique = true)
     private Long numeroCarte;
 

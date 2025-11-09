@@ -2,11 +2,14 @@ package com.project.SpringBank.services;
 
 import com.project.SpringBank.DTO.client.CreateClientRequestDTO;
 import com.project.SpringBank.DTO.client.CreateClientResponseDTO;
+import com.project.SpringBank.DTO.client.GetClientResponseDTO;
 import com.project.SpringBank.DTO.client.UpdateClientRequestDTO;
 import com.project.SpringBank.entities.Client;
+import com.project.SpringBank.mappers.ClientMapper;
 import com.project.SpringBank.repositories.ClientRepository;
 import jakarta.transaction.Transactional;
 import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,9 +18,11 @@ import java.util.Optional;
 
 @Service
 @Builder
+@RequiredArgsConstructor
 public class ClientService {
 
     private final ClientRepository clientRepository;
+    private final ClientMapper clientMapper;
 
     @Transactional
     public Client createClient(CreateClientRequestDTO clientDTO) {
@@ -54,24 +59,10 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
-    public List<CreateClientResponseDTO> listClients() {
-        List<Client> clients = clientRepository.findAll();
+    public List<GetClientResponseDTO> listClients(String prenom, String nom) {
+        List<Client> clients = clientRepository.findByPrenomAndNom(prenom, nom);
         return clients.stream()
-                .map(this::mapClientToResponseDTO)
+                .map(clientMapper::toGetClientResponseDTO)
                 .toList();
     }
-
-    public CreateClientResponseDTO mapClientToResponseDTO(Client client) {
-        return CreateClientResponseDTO.builder()
-                .id(client.getIdClient())
-                .prenom(client.getPrenom())
-                .nom(client.getNom())
-                .dateNaissance(client.getDateNaissance())
-                .email(client.getEmail())
-                .numeroTelephone(client.getNumeroTelephone())
-                .adressePostale(client.getAdressePostale())
-                .dateCreation(client.getDateCreation())
-                .build();
-    }
-
 }

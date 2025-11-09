@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 public class CreateCarteResponseDTO {
 
     private Long titulaireCarte;
-    private String numeroCarte;
+    private Long numeroCarte;
     private LocalDateTime dateExpiration;
 }

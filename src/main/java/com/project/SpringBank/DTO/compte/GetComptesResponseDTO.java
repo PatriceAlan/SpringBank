@@ -21,7 +21,7 @@ public class GetComptesResponseDTO {
     private double solde;
     private String intituleCompte;
     private TypeCompte typeCompte;
-    private Set<Long> titulaireCompte;
+    private Set<Long> titulairesCompte;
     private List<GetTransactionsCompteResponseDTO> transactions = new ArrayList<>();
 
 }

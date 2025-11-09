@@ -14,7 +14,7 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id_transaction", nullable = false, updatable = false)
     private Long idTransaction;
 
     @Enumerated(EnumType.STRING)
@@ -37,6 +37,12 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "compte_id", nullable = false)
     private Compte compte;
+
+    @OneToOne(mappedBy = "transaction", cascade = CascadeType.ALL)
+    private Virement virement;
+
+    @OneToOne(mappedBy = "transaction", cascade = CascadeType.ALL)
+    private PaiementCarte paiementCarte;
 
 }
 

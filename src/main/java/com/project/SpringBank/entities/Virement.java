@@ -16,14 +16,14 @@ public class Virement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id_virement", nullable = false, updatable = false)
     private Long idVirement;
 
-    @Column(name = "iban_compte_debiteur", nullable = false)
-    private String ibanCompteDebiteur;
+    @Column(name = "iban_compte_emetteur", nullable = false)
+    private String ibanCompteEmetteur;
 
-    @Column(name = "iban_compte_crediteur", nullable = false)
-    private String ibanCompteCrediteur;
+    @Column(name = "iban_compte_receveur", nullable = false)
+    private String ibanCompteReceveur;
 
     @Column(name = "date_virement", nullable = false)
     private LocalDateTime dateVirement;

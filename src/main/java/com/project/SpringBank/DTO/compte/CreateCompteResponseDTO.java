@@ -14,7 +14,7 @@ public class CreateCompteResponseDTO {
 
     private String intituleCompte;
     private TypeCompte typeCompte;
-    private Set<Long> titulaireCompte;
+    private Set<Long> titulairesCompte;
     private String iban;
     private LocalDateTime dateCreation;
 

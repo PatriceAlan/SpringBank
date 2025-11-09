@@ -1,12 +1,14 @@
 package com.project.SpringBank.services;
 
+import com.project.SpringBank.DTO.carte.GetCarteResponseDTO;
 import com.project.SpringBank.DTO.compte.CreateCompteRequestDTO;
-import com.project.SpringBank.DTO.compte.CreateCompteResponseDTO;
 import com.project.SpringBank.DTO.compte.GetComptesResponseDTO;
-import com.project.SpringBank.DTO.transaction.GetTransactionsCompteResponseDTO;
+import com.project.SpringBank.entities.Carte;
 import com.project.SpringBank.entities.Client;
 import com.project.SpringBank.entities.Compte;
-import com.project.SpringBank.entities.Transaction;
+import com.project.SpringBank.mappers.CarteMapper;
+import com.project.SpringBank.mappers.CompteMapper;
+import com.project.SpringBank.repositories.CarteRepository;
 import com.project.SpringBank.repositories.ClientRepository;
 import com.project.SpringBank.repositories.CompteRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +26,17 @@ public class CompteService {
 
     private final CompteRepository compteRepository;
     private final ClientRepository clientRepository;
+    private final CarteRepository carteRepository;
+    private final CompteMapper compteMapper;
+    private final CarteMapper carteMapper;
 
 
     public Compte createCompte(CreateCompteRequestDTO compteCree) {
 
         // Recherche des clients par leur ID
         Set<Client> titulaires = new HashSet<>();
-        for (Long clientId : compteCree.getTitulaireCompte()) {
-            Optional<Client> existingClient = clientRepository.getClientById(clientId);
+        for (Long clientId : compteCree.getTitulairesCompte()) {
+            Optional<Client> existingClient = clientRepository.getClientByIdClient(clientId);
             if (existingClient.isEmpty()){
                 throw new IllegalArgumentException("Le client avec l'ID " + clientId + "est introuvable.");
             }
@@ -44,7 +49,7 @@ public class CompteService {
         Compte compte = Compte.builder()
                 .typeCompte(compteCree.getTypeCompte())
                 .numeroCompte(numeroCompteCree)
-                .titulaires(titulaires)
+                .titulairesCompte(titulaires)
                 .intituleCompte(compteCree.getIntituleCompte())
                 .dateCreation(LocalDateTime.now())
                 .iban(ibanCree)
@@ -54,61 +59,20 @@ public class CompteService {
     }
 
 
-
-    public CreateCompteResponseDTO mapCompteToResponseDTO(Compte compte){
-
-        Set<Long> titulaires = new HashSet<>();
-        for (Client client : compte.getTitulaires()) {
-            titulaires.add(client.getIdClient());
-        }
-        return CreateCompteResponseDTO.builder()
-                .iban(compte.getIban())
-                .typeCompte(compte.getTypeCompte())
-                .titulaireCompte(titulaires)
-                .intituleCompte(compte.getIntituleCompte())
-                .dateCreation(compte.getDateCreation())
-                .build();
-    }
-
-    public GetComptesResponseDTO mapGetComptesToResponseDTO(Compte compte){
-
-        Set<Long> titulaires = new HashSet<>();
-        for (Client client : compte.getTitulaires()) {
-            titulaires.add(client.getIdClient());
-        }
-
-        List<GetTransactionsCompteResponseDTO> transactionsDTO = new ArrayList<>();
-        if (compte.getTransactions() != null) {
-            for (Transaction transaction : compte.getTransactions()) {
-                GetTransactionsCompteResponseDTO transactionDTO = GetTransactionsCompteResponseDTO.builder()
-                        .idTransaction(transaction.getIdTransaction())
-                        .typeTransaction(transaction.getTypeTransaction())
-                        .typeSource(transaction.getTypeSource())
-                        .montantTransaction(transaction.getMontantTransaction())
-                        .dateTransaction(transaction.getDateTransaction())
-                        .build();
-                transactionsDTO.add(transactionDTO);
-            }
-        }
-
-        return GetComptesResponseDTO.builder()
-                .iban(compte.getIban())
-                .solde(compte.getSolde())
-                .typeCompte(compte.getTypeCompte())
-                .titulaireCompte(titulaires)
-                .intituleCompte(compte.getIntituleCompte())
-                .transactions(transactionsDTO)
-                .build();
-
-    }
-
-    public List<GetComptesResponseDTO> listComptes(){
-        List<Compte> comptes = compteRepository.findAll();
+    public List<GetComptesResponseDTO> listComptesClient(Client titulairesCompte){
+        List<Compte> comptes = compteRepository.findByTitulairesCompte(titulairesCompte);
         return comptes.stream()
-                .map(this::mapGetComptesToResponseDTO)
+                .map(compteMapper::toGetComptesResponseDTO)
                 .toList();
     }
 
+    public List<GetCarteResponseDTO> listCartesCompte(String iban){
+        List<Carte> cartes = carteRepository.findByCompteAssocie_Iban(iban);
+
+        return cartes.stream()
+                .map(carteMapper::toGetCarteResponseDTO)
+                .toList();
+    }
 
 
 }

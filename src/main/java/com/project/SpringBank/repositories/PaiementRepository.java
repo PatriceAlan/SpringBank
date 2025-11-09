@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface PaiementRepository extends JpaRepository<PaiementCarte, Long> {
-    List<PaiementCarte> findByNumeroCarte(String numeroCarte);
 }
